@@ -43,6 +43,11 @@ public class testes extends AppCompatActivity {
 
                 if (aaa != null) {
                     System.out.println(aaa.getNome());
+                    System.out.println(aaa.getEmail());
+                    System.out.println(aaa.getUsername());
+                    System.out.println(aaa.getPassword());
+
+
                 }
 
                 textView.setText(aaa.getNome().toString());
