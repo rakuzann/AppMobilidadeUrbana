@@ -73,4 +73,8 @@ public class LoginActivity extends AppCompatActivity {
         Intent mudar = new Intent(this, MapsActivity.class);
         startActivity(mudar);
     }
+
+    public void guestLogin (View view){
+
+    }
 }
