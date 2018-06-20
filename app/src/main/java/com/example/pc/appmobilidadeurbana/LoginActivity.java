@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public void antonio(View view){
-        Intent mudar = new Intent(this, ActivityTestes.class);
+        Intent mudar = new Intent(this, MapsActivity.class);
         startActivity(mudar);
     }
 }
