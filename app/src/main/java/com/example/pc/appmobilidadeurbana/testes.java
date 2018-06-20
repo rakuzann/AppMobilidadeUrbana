@@ -46,6 +46,8 @@ public class testes extends AppCompatActivity {
                     System.out.println(utilizador.getEmail());
                     System.out.println(utilizador.getUsername());
                     System.out.println(utilizador.getPassword());
+                }else{
+                    return;
                 }
 
                 //caso seja perciso alguma alteração no UI, tem de ser aqui
