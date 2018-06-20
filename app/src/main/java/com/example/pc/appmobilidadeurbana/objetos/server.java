@@ -24,7 +24,7 @@ public class server {
     public static Utilizador postLoginHttp (String user, String pass) {
         Utilizador utilizador = null;
         HttpClient httpClient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost("http://projetos.est.ipcb.pt/.../getLogin.php");
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/getLogin.php");
 
         try {
             ArrayList<NameValuePair> val = new ArrayList <NameValuePair>();
@@ -47,7 +47,7 @@ public class server {
                     if (!userJSon.getJSONObject(0).getString("username").isEmpty()) {
                         utilizador = new Utilizador();
                         utilizador.setUsername(userJSon.getJSONObject(0).getString("username"));
-                        utilizador.setNome(userJSon.getJSONObject(0).getString("name"));
+                        utilizador.setNome(userJSon.getJSONObject(0).getString("nome"));
                         utilizador.setPassword(userJSon.getJSONObject(0).getString("password"));
                         utilizador.setEmail(userJSon.getJSONObject(0).getString("email"));
                     }
