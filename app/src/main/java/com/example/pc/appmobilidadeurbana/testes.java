@@ -38,25 +38,21 @@ public class testes extends AppCompatActivity {
 
         new Thread(){
             public void run (){
-                final Utilizador aaa = server.postLoginHttp("joaosousa","joaosousa");
+                final Utilizador utilizador = server.postLoginHttp("joaosousa","joaosousa");
 
 
-                if (aaa != null) {
-                    System.out.println(aaa.getNome());
-                    System.out.println(aaa.getEmail());
-                    System.out.println(aaa.getUsername());
-                    System.out.println(aaa.getPassword());
-
-
+                if (utilizador != null) {
+                    System.out.println(utilizador.getNome());
+                    System.out.println(utilizador.getEmail());
+                    System.out.println(utilizador.getUsername());
+                    System.out.println(utilizador.getPassword());
                 }
 
+                //caso seja perciso alguma alteração no UI, tem de ser aqui
                 runOnUiThread(new Runnable() {
-
                     @Override
                     public void run() {
-
-                        textView.setText(aaa.getNome().toString());
-
+                        textView.setText(utilizador.getNome().toString());
                     }
                 });
 
