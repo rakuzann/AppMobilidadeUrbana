@@ -67,6 +67,45 @@ public class server {
         return utilizador;
     }
 
+    public static boolean existeUser (String user) {
+        Utilizador utilizador = null;
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/getUser.php");
+
+        try {
+            ArrayList<NameValuePair> val = new ArrayList <NameValuePair>();
+
+            val.add(new BasicNameValuePair("username", user));
+
+
+            httpPost.setEntity(new UrlEncodedFormEntity(val));
+            HttpResponse resposta = httpClient.execute(httpPost);
+
+
+            try {
+                final String resp = EntityUtils.toString(resposta.getEntity());
+                JSONObject reader = new JSONObject(resp);
+                JSONArray userJSon  = reader.getJSONArray("user");
+
+
+                if (userJSon.length() > 0)
+                    if (!userJSon.getJSONObject(0).getString("username").isEmpty()) {
+                            return true;
+                    }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        catch (ClientProtocolException e) {}
+        catch (IOException e) {}
+
+        return false;
+    }
+
     public static void postRegisterHttp (String user, String pass, String nome, String email) {
 
         Utilizador utilizador = null;
