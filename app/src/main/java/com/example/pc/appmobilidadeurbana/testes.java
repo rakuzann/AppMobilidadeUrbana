@@ -38,7 +38,7 @@ public class testes extends AppCompatActivity {
 
         new Thread(){
             public void run (){
-                Utilizador aaa = server.postLoginHttp("joaosousa","joaosousa");
+                final Utilizador aaa = server.postLoginHttp("joaosousa","joaosousa");
 
 
                 if (aaa != null) {
@@ -50,7 +50,16 @@ public class testes extends AppCompatActivity {
 
                 }
 
-                textView.setText(aaa.getNome().toString());
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        textView.setText(aaa.getNome().toString());
+
+                    }
+                });
+
 
 
             }
