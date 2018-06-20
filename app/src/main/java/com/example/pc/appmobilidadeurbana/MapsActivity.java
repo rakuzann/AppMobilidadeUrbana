@@ -67,23 +67,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void pesquisarMapa () {
 
-        String searchPlace = search.getQuery().toString();
+            String searchPlace = search.getQuery().toString();
 
-        Geocoder geocoder = new Geocoder(MapsActivity.this);
-        List<Address> list = new ArrayList<>();
-        try {
-            list = geocoder.getFromLocationName(searchPlace, 1);
-        } catch (IOException e) {
+            Geocoder geocoder = new Geocoder(MapsActivity.this);
+            List<Address> list = new ArrayList<>();
+            try {
+                list = geocoder.getFromLocationName(searchPlace, 1);
+            } catch (IOException e) {
 
-        }
+            }
 
-        if(list.size() >= 1){
-            Address address = list.get(0);
-            LatLng indo = new LatLng(address.getLatitude(), address.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(indo));
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(16.0f));
+            if(list.size() >= 1){
+                Address address = list.get(0);
+                LatLng indo = new LatLng(address.getLatitude(), address.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(indo));
+                mMap.moveCamera(CameraUpdateFactory.zoomTo(16.0f));
 
-        }
+            }
 
 
     }
