@@ -67,6 +67,11 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(mudar);
     }
 
+    public void rnd (View view){
+        Intent mudar = new Intent(this, testes.class);
+        startActivity(mudar);
+    }
+
 
     public void antonio(View view){
         Intent mudar = new Intent(this, MapsActivity.class);
