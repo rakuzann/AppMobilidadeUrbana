@@ -19,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
 
         Utilizador utilizador = (Utilizador) getIntent().getSerializableExtra("utilizador");
 
-        textViewUser.setText(utilizador.getNome().toString());
+        if(utilizador!=null)
+            textViewUser.setText(utilizador.getNome().toString());
+        else
+            textViewUser.setText("guest");
     }
 }
