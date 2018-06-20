@@ -13,13 +13,30 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        map:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp"
+        map:layout_constraintBottom_toTopOf="@+id/btnFavoritos"
         map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintHorizontal_bias="0.0"
         map:layout_constraintStart_toStartOf="parent"
-        map:layout_constraintTop_toTopOf="parent"
+        map:layout_constraintTop_toBottomOf="@+id/searchView"
         tools:context=".MapsActivity" />
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <Button
+        android:id="@+id/btnFavoritos"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Favoritos"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
