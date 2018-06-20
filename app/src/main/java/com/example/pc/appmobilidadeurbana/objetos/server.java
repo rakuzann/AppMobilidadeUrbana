@@ -1,8 +1,11 @@
 package com.example.pc.appmobilidadeurbana.objetos;
 
 
+import android.util.Log;
+
 import com.example.pc.appmobilidadeurbana.objetos.Utilizador;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -64,12 +67,14 @@ public class server {
         return utilizador;
     }
 
-    public static void postRegisterHttp (String user, String pass, String nome, String email) {
+    public static Utilizador postRegisterHttp (String user, String pass, String nome, String email) {
+
         Utilizador utilizador = null;
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/register.php");
 
         try {
+
             ArrayList<NameValuePair> val = new ArrayList <NameValuePair>();
 
             val.add(new BasicNameValuePair("username", user));
@@ -78,14 +83,42 @@ public class server {
             val.add(new BasicNameValuePair("email", email));
 
 
+
             httpPost.setEntity(new UrlEncodedFormEntity(val));
+            httpClient.execute(httpPost);
             HttpResponse resposta = httpClient.execute(httpPost);
+            HttpEntity resEntity = resposta.getEntity();
+
+        //------------------------------ random
+
+            try {
+                final String resp = EntityUtils.toString(resposta.getEntity());
+                JSONObject reader = new JSONObject(resp);
+                JSONArray userJSon  = reader.getJSONArray("user");
+
+
+                if (userJSon.length() > 0)
+                    if (!userJSon.getJSONObject(0).getString("username").isEmpty()) {
+                        utilizador = new Utilizador();
+                        utilizador.setUsername(userJSon.getJSONObject(0).getString("username"));
+                        utilizador.setNome(userJSon.getJSONObject(0).getString("nome"));
+                        utilizador.setPassword(userJSon.getJSONObject(0).getString("password"));
+                        utilizador.setEmail(userJSon.getJSONObject(0).getString("email"));
+                    }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            //------------------------------- random
 
         }
 
         catch (ClientProtocolException e) {}
         catch (IOException e) {}
 
+        return utilizador;
     }
 
 }
