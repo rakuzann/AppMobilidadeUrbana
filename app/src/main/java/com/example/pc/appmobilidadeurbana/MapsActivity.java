@@ -53,6 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LOCATION_REQUEST = 500;
     ArrayList<LatLng> listPoints;
     LocationManager lm;
+    LatLng myPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 public void onLocationChanged(Location location) {
                     double lat = location.getLatitude();
                     double log = location.getLongitude();
-                    LatLng myPlace = new LatLng(lat,log);
+                    myPlace = new LatLng(lat,log);
                     Geocoder geocoder = new Geocoder(MapsActivity.this);
 
                     try {
@@ -107,7 +108,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 public void onLocationChanged(Location location) {
                     double lat = location.getLatitude();
                     double log = location.getLongitude();
-                    LatLng myPlace = new LatLng(lat,log);
+                    myPlace = new LatLng(lat,log);
                     Geocoder geocoder = new Geocoder(MapsActivity.this);
 
                     try {
@@ -151,9 +152,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
 
-
-
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -171,70 +169,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
+
+        //Activar Localizador Automatico do Google
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST);
             return;
         }
         mMap.setMyLocationEnabled(true);
 
-
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                //Reset marker when already 2
-                if (listPoints.size() == 2) {
-                    listPoints.clear();
-                    mMap.clear();
-                }
-
-                //Save first point select
-                listPoints.add(latLng);
-                //Create marker
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-
-
-                if (listPoints.size() == 1) {
-                    //Add first marker to the map
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                } else {
-                    //Add second marker to the map
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                }
-                mMap.addMarker(markerOptions);
-
-                if (listPoints.size() == 2) {
-                    //Create the URL to get request from first marker to second marker
-                    String url = getRequestUrl(listPoints.get(0), listPoints.get(1));
-                    TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-                    taskRequestDirections.execute(url);
-                }
-            }
-        });
-
     }
 
 
-
+    //Utilizador escolhe uma localização para fazer uma rota desde da sua posição actual ate esta
     public void pesquisarMapa () {
 
+            mMap.clear();
+
+           //Obter dados do destino atraves do nome deste
             String searchPlace = search.getQuery().toString();
 
             Geocoder geocoder = new Geocoder(MapsActivity.this);
             List<Address> list = new ArrayList<>();
+
             try {
                 list = geocoder.getFromLocationName(searchPlace, 1);
             } catch (IOException e) {
 
             }
 
-            if(list.size() >= 1){
-                Address address = list.get(0);
-                LatLng indo = new LatLng(address.getLatitude(), address.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(indo));
-                mMap.moveCamera(CameraUpdateFactory.zoomTo(16.0f));
 
+            //Verificar Se existe destino
+            if(list.size() >= 1){
+                //Obter Destino
+                Address address = list.get(0);
+                LatLng destino = new LatLng(address.getLatitude(), address.getLongitude());
+
+               //Marcardor destino
+                mMap.addMarker(new MarkerOptions().position(destino).title("Destino"));
+
+               //Metodos de calcular a rota
+                String url = getRequestUrl(myPlace, destino);
+                TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+                taskRequestDirections.execute(url);
             }
+
+
 
 
     }
