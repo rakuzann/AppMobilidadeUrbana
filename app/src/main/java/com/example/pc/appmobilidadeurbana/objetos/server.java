@@ -1,5 +1,7 @@
-package com.example.pc.appmobilidadeurbana;
+package com.example.pc.appmobilidadeurbana.objetos;
 
+
+import com.example.pc.appmobilidadeurbana.objetos.Utilizador;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;

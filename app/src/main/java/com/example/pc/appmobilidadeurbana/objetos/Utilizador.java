@@ -1,4 +1,4 @@
-package com.example.pc.appmobilidadeurbana;
+package com.example.pc.appmobilidadeurbana.objetos;
 
 public class Utilizador {
 
