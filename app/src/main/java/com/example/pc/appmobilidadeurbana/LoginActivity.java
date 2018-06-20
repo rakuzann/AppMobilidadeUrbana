@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -13,7 +14,7 @@ import com.example.pc.appmobilidadeurbana.objetos.server;
 public class LoginActivity extends AppCompatActivity {
 
     EditText username,password;
-
+    Button btnGuest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,8 @@ public class LoginActivity extends AppCompatActivity {
 
         username = findViewById(R.id.etNome);
         password = findViewById(R.id.etPass);
+
+        btnGuest = findViewById(R.id.btnLogInGuest);
     }
 
 
@@ -57,11 +60,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void btnLogInGuest(View view){
-        Intent mudar = new Intent(LoginActivity.this, MainActivity.class);
-        //mudar.putExtra("utilizador", utilizador);
-        startActivity(mudar);
-    }
+
 
     public void test(View view){
         Intent mudar = new Intent(this, testes.class);
@@ -73,4 +72,9 @@ public class LoginActivity extends AppCompatActivity {
         Intent mudar = new Intent(this, ActivityTestes.class);
         startActivity(mudar);
     }
+
+    public void longinGuest(View view){
+
+    }
+
 }
