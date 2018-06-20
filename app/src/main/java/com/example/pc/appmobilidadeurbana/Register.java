@@ -40,6 +40,9 @@ public class Register extends AppCompatActivity {
                 String nm = nome.getText().toString();
                 String mail = email.getText().toString();
 
+                if(server.existeUser(user)){
+                    return;
+                }
                 server.postRegisterHttp(user,pw,nm,mail);
 
             }
