@@ -63,4 +63,29 @@ public class server {
 
         return utilizador;
     }
+
+    public static void postRegisterHttp (String user, String pass, String nome, String email) {
+        Utilizador utilizador = null;
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/register.php");
+
+        try {
+            ArrayList<NameValuePair> val = new ArrayList <NameValuePair>();
+
+            val.add(new BasicNameValuePair("username", user));
+            val.add(new BasicNameValuePair("password", pass));
+            val.add(new BasicNameValuePair("nome", nome));
+            val.add(new BasicNameValuePair("email", email));
+
+
+            httpPost.setEntity(new UrlEncodedFormEntity(val));
+            HttpResponse resposta = httpClient.execute(httpPost);
+
+        }
+
+        catch (ClientProtocolException e) {}
+        catch (IOException e) {}
+
+    }
+
 }
