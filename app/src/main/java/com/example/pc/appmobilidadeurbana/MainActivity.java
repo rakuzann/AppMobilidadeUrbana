@@ -19,4 +19,9 @@ public class MainActivity extends AppCompatActivity {
         Intent mudar = new Intent(this, MapsActivity.class);
         startActivity(mudar);
     }
+
+    public void test(View view){
+        Intent mudar = new Intent(this, testes.class);
+        startActivity(mudar);
+    }
 }
