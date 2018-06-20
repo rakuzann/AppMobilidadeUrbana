@@ -34,5 +34,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng casa  = new LatLng(39.825350, -7.507580);
         mMap.addMarker(new MarkerOptions().position(casa).title("Estou te a ver fdep joao"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(casa));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(16.0f));
     }
 }
