@@ -41,10 +41,22 @@ public class Register extends AppCompatActivity {
                 String mail = email.getText().toString();
 
                 if(server.existeUser(user)){
-                    return;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(Register.this,"username já em uso",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else {
+                    server.postRegisterHttp(user, pw, nm, mail);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(Register.this,"Registo efetuado com sucesso",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    finish();
                 }
-                server.postRegisterHttp(user,pw,nm,mail);
-
             }
         }.start();
 
