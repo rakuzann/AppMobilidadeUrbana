@@ -1,6 +1,8 @@
 package com.example.pc.appmobilidadeurbana.objetos;
 
-public class Utilizador {
+import java.io.Serializable;
+
+public class Utilizador implements Serializable {
 
     private String nome;
     private String username;

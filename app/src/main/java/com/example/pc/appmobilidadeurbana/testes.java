@@ -2,6 +2,7 @@ package com.example.pc.appmobilidadeurbana;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,7 +34,6 @@ public class testes extends AppCompatActivity {
 
     public void btn(View view){
 
-
         new Thread(){
             public void run (){
                 final Utilizador utilizador = server.postLoginHttp(user.getText().toString(),password.getText().toString());
@@ -45,6 +45,7 @@ public class testes extends AppCompatActivity {
                     System.out.println(utilizador.getUsername());
                     System.out.println(utilizador.getPassword());
                 }else{
+                    Log.d("ew","login fail");
                     return;
                 }
 
@@ -61,5 +62,8 @@ public class testes extends AppCompatActivity {
             }
         }.start();
 
+
     }
+
+
 }
