@@ -79,4 +79,8 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(mudar);
     }
 
+    public void criarConta(View view){
+        Intent mudar = new Intent(LoginActivity.this, Register.class);
+        startActivity(mudar);
+    }
 }
