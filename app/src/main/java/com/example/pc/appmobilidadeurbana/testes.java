@@ -34,8 +34,6 @@ public class testes extends AppCompatActivity {
     public void btn(View view){
 
 
-
-
         new Thread(){
             public void run (){
                 final Utilizador utilizador = server.postLoginHttp(user.getText().toString(),password.getText().toString());
