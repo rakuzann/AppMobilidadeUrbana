@@ -24,4 +24,10 @@ public class MainActivity extends AppCompatActivity {
         Intent mudar = new Intent(this, testes.class);
         startActivity(mudar);
     }
+
+
+    public void antonio(View view){
+        Intent mudar = new Intent(this, ActivityTestes.class);
+        startActivity(mudar);
+    }
 }
