@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(mudar);
     }
 
-    public void longinGuest(View view){
+    public void loginGuest(View view){
 
     }
 
