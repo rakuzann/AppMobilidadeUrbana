@@ -74,7 +74,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void loginGuest(View view){
-
+        Intent mudar = new Intent(LoginActivity.this, MainActivity.class);
+        //mudar.putExtra("utilizador", utilizador);
+        startActivity(mudar);
     }
 
 }
