@@ -160,6 +160,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Array para localizar dois pontos funcionar
         listPoints = new ArrayList<>();
+
+
     }
 
 
@@ -176,6 +178,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
+
 
     }
 
