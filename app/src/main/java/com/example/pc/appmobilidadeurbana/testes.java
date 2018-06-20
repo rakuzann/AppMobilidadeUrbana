@@ -38,7 +38,7 @@ public class testes extends AppCompatActivity {
 
         new Thread(){
             public void run (){
-                final Utilizador utilizador = server.postLoginHttp("joaosousa","joaosousa");
+                final Utilizador utilizador = server.postLoginHttp(user.getText().toString(),password.getText().toString());
 
 
                 if (utilizador != null) {
@@ -61,11 +61,5 @@ public class testes extends AppCompatActivity {
             }
         }.start();
 
-
-
-
-
-
-        //Toast.makeText(this, utilizador.getNome().toString(), Toast.LENGTH_SHORT).show();
     }
 }
