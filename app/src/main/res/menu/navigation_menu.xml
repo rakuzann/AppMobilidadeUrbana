@@ -1,18 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    tools:showIn="Navigation_View">
 
-    <item
-        android:id="@+id/nav_account"
-        android:title="My Account"></item>
 
-    <item android:id="@+id/nav_settings"
-        android:title="Settings" >
-    </item>
+    <group android:checkableBehavior="single">
 
-    <item android:id="@+id/nav_logout"
-        android:title="Log out" >
-    </item>
+
+        <item
+            android:id="@+id/nav_map"
+            android:icon="@drawable/ic_map"
+            android:title="Map" />
+
+        <item
+            android:id="@+id/nav_account"
+            android:icon="@drawable/ic_profile"
+            android:title="My Account" />
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="Settings" />
+
+        <item
+            android:id="@+id/nav_taxi"
+            android:icon="@drawable/ic_taxi"
+            android:title="Call Taxi" />
+
+    </group>
+
 
 </menu>
