@@ -73,7 +73,7 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
 
 
 
-        //Dados do destino
+        //Carregar Dados do destino
         String getDestino = getIntent().getStringExtra("destino");
         Geocoder geocoder = new Geocoder(SearchMapActivity.this);
         List<Address> list = new ArrayList<>();
@@ -91,7 +91,7 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
 
 
 
-        //Dados da Origem
+        //Carregar Dados da Origem
         String getOrigem = getIntent().getStringExtra("origem");
         Geocoder geocoderOrigem = new Geocoder(SearchMapActivity.this);
         List<Address> listOrigem = new ArrayList<>();
@@ -99,18 +99,20 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
             listOrigem = geocoderOrigem.getFromLocationName(getOrigem, 1);
         } catch (IOException e) {}
         if(listOrigem.size() >= 1){
-            //Obter Destino
+            //Obter Origem
             Address address = listOrigem.get(0);
             origem = new LatLng(address.getLatitude(), address.getLongitude());
-            //Marcardor destino
+            //Marcardor Origem
             mMap.addMarker(new MarkerOptions().position(origem).title("Origem"));
-            //Mover Mapa Para o Destino
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(origem));
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(14.0f));
-
         }
 
 
+        //Mover Mapa Para o Origem
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(origem));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(14.0f));
+
+
+        //Calcular a rota
         String url = getRequestUrl(origem, destino);
         SearchMapActivity.TaskRequestDirections taskCaminho = new SearchMapActivity.TaskRequestDirections();
         taskCaminho.execute(url);
@@ -120,7 +122,7 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
 
 
 
-
+    //Metodos de calcular a rota
     private String getRequestUrl(LatLng origin, LatLng dest) {
         //Value of origin
         String str_org = "origin=" + origin.latitude +","+origin.longitude;
@@ -172,8 +174,6 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
         }
         return responseString;
     }
-
-
     @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -185,8 +185,6 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
                 break;
         }
     }
-
-
     public class TaskRequestDirections extends AsyncTask<String, Void, String> {
 
         @Override

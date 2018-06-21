@@ -233,14 +233,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public void searchBtn (View v ){
+        public void searchBtn (View v ){
         Intent mudar = new Intent(this, SearchActivity.class);
         startActivity(mudar);
-    }
-    
-
-
-
+        }
 
         private String getRequestUrl(LatLng origin, LatLng dest) {
             //Value of origin
@@ -293,8 +289,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             return responseString;
         }
-
-
         @SuppressLint("MissingPermission")
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -306,8 +300,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     break;
             }
         }
-
-
         public class TaskRequestDirections extends AsyncTask<String, Void, String> {
 
             @Override
