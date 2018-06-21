@@ -44,7 +44,10 @@
         <activity android:name=".testes" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".Register"></activity>
+        <activity android:name=".Register" />
+        <activity
+            android:name=".SearchMapActivity"
+            android:label="@string/title_activity_search_map"></activity>
     </application>
 
 </manifest>

@@ -214,19 +214,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String url = getRequestUrl(myPlace, destino);
                 TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
                 taskRequestDirections.execute(url);
-            }
+            }if(list.size() >= 1){
+            //Obter Destino
+            Address address = list.get(0);
+            LatLng destino = new LatLng(address.getLatitude(), address.getLongitude());
+
+            //Marcardor destino
+            mMap.addMarker(new MarkerOptions().position(destino).title("Destino"));
+
+            //Metodos de calcular a rota
+            String url = getRequestUrl(myPlace, destino);
+            TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+            taskRequestDirections.execute(url);
+        }
 
 
 
 
     }
 
-    public void searchBtn (View v ){
+        public void searchBtn (View v ){
         Intent mudar = new Intent(this, SearchActivity.class);
         startActivity(mudar);
-    }
-    
-
+        }
 
         private String getRequestUrl(LatLng origin, LatLng dest) {
             //Value of origin
@@ -279,8 +289,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             return responseString;
         }
-
-
         @SuppressLint("MissingPermission")
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -292,8 +300,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     break;
             }
         }
-
-
         public class TaskRequestDirections extends AsyncTask<String, Void, String> {
 
             @Override
