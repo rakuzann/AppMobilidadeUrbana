@@ -20,7 +20,7 @@
     <EditText
         android:id="@+id/etDestino"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:ems="10"
         android:inputType="textPersonName"
@@ -66,6 +66,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@android:color/darker_gray"
+        android:onClick="mudarRota"
         android:text="IR"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

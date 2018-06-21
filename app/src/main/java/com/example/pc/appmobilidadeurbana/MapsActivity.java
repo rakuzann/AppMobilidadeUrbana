@@ -214,7 +214,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String url = getRequestUrl(myPlace, destino);
                 TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
                 taskRequestDirections.execute(url);
-            }
+            }if(list.size() >= 1){
+            //Obter Destino
+            Address address = list.get(0);
+            LatLng destino = new LatLng(address.getLatitude(), address.getLongitude());
+
+            //Marcardor destino
+            mMap.addMarker(new MarkerOptions().position(destino).title("Destino"));
+
+            //Metodos de calcular a rota
+            String url = getRequestUrl(myPlace, destino);
+            TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+            taskRequestDirections.execute(url);
+        }
 
 
 
@@ -226,6 +238,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(mudar);
     }
     
+
+
 
 
         private String getRequestUrl(LatLng origin, LatLng dest) {
