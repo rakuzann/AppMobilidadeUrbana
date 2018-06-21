@@ -121,6 +121,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     }
 
+                    lm.removeUpdates(this);
                 }
 
                 @Override
@@ -153,6 +154,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     } catch (IOException e) {
 
                     }
+
+                    lm.removeUpdates(this);
 
                 }
 
@@ -221,7 +224,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Toast.makeText(this, "nav_settings", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_taxi:
-                Toast.makeText(this, "nav_taxi", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(this, TaxiActivity.class);
+                startActivity(i);
                 break;
 
         }
@@ -255,6 +259,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
+
 
 
     }
