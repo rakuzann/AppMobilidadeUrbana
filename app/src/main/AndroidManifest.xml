@@ -48,7 +48,8 @@
         <activity
             android:name=".SearchMapActivity"
             android:label="@string/title_activity_search_map" />
-        <activity android:name=".TaxiActivity"></activity>
+        <activity android:name=".TaxiActivity" />
+        <activity android:name=".InfoActivity"></activity>
     </application>
 
 </manifest>

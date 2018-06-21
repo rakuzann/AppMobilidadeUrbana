@@ -213,7 +213,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_map:
-                Toast.makeText(this, "nav_map", Toast.LENGTH_SHORT).show();
+                Intent x = new Intent(this, InfoActivity.class);
+                startActivity(x);
                 break;
             case R.id.nav_account:
                 //Intent i = new Intent(this, Register.class);
