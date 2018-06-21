@@ -25,14 +25,14 @@ public class SearchActivity extends AppCompatActivity {
         txtOrigem = findViewById(R.id.etOrigem);
     }
 
-    public void voltar (View view){
+    public void voltar(View view) {
         finish();
     }
 
-    public void mudarRota (View v){
+    public void mudarRota(View v) {
         Intent mudar = new Intent(this, SearchMapActivity.class);
-        mudar.putExtra("destino",txtDestino.getText().toString());
-        mudar.putExtra("origem",txtOrigem.getText().toString());
+        mudar.putExtra("destino", txtDestino.getText().toString());
+        mudar.putExtra("origem", txtOrigem.getText().toString());
         startActivity(mudar);
     }
 }

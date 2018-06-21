@@ -1,51 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layouts"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapsActivity">
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity"
+    tools:openDrawer="right">
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        map:layout_constraintBottom_toTopOf="@+id/btnFavoritos"
-        map:layout_constraintEnd_toEndOf="parent"
-        map:layout_constraintHorizontal_bias="0.0"
-        map:layout_constraintStart_toStartOf="parent"
-        map:layout_constraintTop_toBottomOf="@+id/searchView"
-        tools:context=".MapsActivity" />
+        android:layout_height="match_parent"
+        tools:context=".MapsActivity">
 
-    <SearchView
-        android:id="@+id/searchView"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
-        app:layout_constraintEnd_toStartOf="@+id/btnPesquisaAvançada"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            map:layout_constraintBottom_toTopOf="@+id/btnFavoritos"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintHorizontal_bias="0.0"
+            map:layout_constraintStart_toStartOf="parent"
+            map:layout_constraintTop_toBottomOf="@+id/searchView"
+            tools:context=".MapsActivity" />
 
-    <Button
-        android:id="@+id/btnFavoritos"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Favoritos"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            app:layout_constraintEnd_toStartOf="@+id/btnPesquisaAvançada"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnPesquisaAvançada"
+        <Button
+            android:id="@+id/btnFavoritos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Favoritos"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btnPesquisaAvançada"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="searchBtn"
+            android:text="Search"
+            app:layout_constraintBottom_toTopOf="@+id/map"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_viewr"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="searchBtn"
-        android:text="Search"
-        app:layout_constraintBottom_toTopOf="@+id/map"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/navigation_menu">
 
-</android.support.constraint.ConstraintLayout>
+    </android.support.design.widget.NavigationView>
+
+
+</android.support.v4.widget.DrawerLayout>

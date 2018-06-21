@@ -13,7 +13,7 @@ import com.example.pc.appmobilidadeurbana.objetos.server;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText username,password;
+    EditText username, password;
     Button btnGuest;
 
     @Override
@@ -28,14 +28,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    public void btnStart (View v){
+    public void btnStart(View v) {
 
         boolean login = false;
 
 
-        new Thread(){
-            public void run (){
-                Utilizador utilizador = server.postLoginHttp(username.getText().toString(),password.getText().toString());
+        new Thread() {
+            public void run() {
+                Utilizador utilizador = server.postLoginHttp(username.getText().toString(), password.getText().toString());
 
 
                 if (utilizador != null) {
@@ -44,12 +44,12 @@ public class LoginActivity extends AppCompatActivity {
                     mudar.putExtra("utilizador", utilizador);
                     startActivity(mudar);
 
-                }else{
+                } else {
                     //caso seja perciso alguma alteração no UI, tem de ser aqui
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(LoginActivity.this,"Login Inválido",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Login Inválido", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -61,30 +61,29 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
-    public void test(View view){
+    public void test(View view) {
         Intent mudar = new Intent(this, testes.class);
         startActivity(mudar);
     }
 
-    public void rnd (View view){
+    public void rnd(View view) {
         Intent mudar = new Intent(this, testes.class);
         startActivity(mudar);
     }
 
 
-    public void antonio(View view){
+    public void antonio(View view) {
         Intent mudar = new Intent(this, MapsActivity.class);
         startActivity(mudar);
     }
 
-    public void loginGuest(View view){
+    public void loginGuest(View view) {
         Intent mudar = new Intent(LoginActivity.this, MainActivity.class);
         //mudar.putExtra("utilizador", utilizador);
         startActivity(mudar);
     }
 
-    public void criarConta(View view){
+    public void criarConta(View view) {
         Intent mudar = new Intent(LoginActivity.this, Register.class);
         startActivity(mudar);
     }

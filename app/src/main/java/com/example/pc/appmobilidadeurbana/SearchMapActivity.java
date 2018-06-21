@@ -41,7 +41,7 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
     private GoogleMap mMap;
     private static final int LOCATION_REQUEST = 500;
     ArrayList<LatLng> listPoints;
-    LatLng origem,destino;
+    LatLng origem, destino;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,17 +70,15 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
         mMap.setMyLocationEnabled(true);
 
 
-
-
-
         //Carregar Dados do destino
         String getDestino = getIntent().getStringExtra("destino");
         Geocoder geocoder = new Geocoder(SearchMapActivity.this);
         List<Address> list = new ArrayList<>();
         try {
             list = geocoder.getFromLocationName(getDestino, 1);
-        } catch (IOException e) {}
-        if(list.size() >= 1){
+        } catch (IOException e) {
+        }
+        if (list.size() >= 1) {
             //Obter Destino
             Address address = list.get(0);
             destino = new LatLng(address.getLatitude(), address.getLongitude());
@@ -90,15 +88,15 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
         }
 
 
-
         //Carregar Dados da Origem
         String getOrigem = getIntent().getStringExtra("origem");
         Geocoder geocoderOrigem = new Geocoder(SearchMapActivity.this);
         List<Address> listOrigem = new ArrayList<>();
         try {
             listOrigem = geocoderOrigem.getFromLocationName(getOrigem, 1);
-        } catch (IOException e) {}
-        if(listOrigem.size() >= 1){
+        } catch (IOException e) {
+        }
+        if (listOrigem.size() >= 1) {
             //Obter Origem
             Address address = listOrigem.get(0);
             origem = new LatLng(address.getLatitude(), address.getLongitude());
@@ -121,30 +119,30 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
 
-
     //Metodos de calcular a rota
     private String getRequestUrl(LatLng origin, LatLng dest) {
         //Value of origin
-        String str_org = "origin=" + origin.latitude +","+origin.longitude;
+        String str_org = "origin=" + origin.latitude + "," + origin.longitude;
         //Value of destination
-        String str_dest = "destination=" + dest.latitude+","+dest.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
         //Set value enable the sensor
         String sensor = "sensor=false";
         //Mode for find direction
         String mode = "mode=driving";
         //Build the full param
-        String param = str_org +"&" + str_dest + "&" +sensor+"&" +mode;
+        String param = str_org + "&" + str_dest + "&" + sensor + "&" + mode;
         //Output format
         String output = "json";
         //Create url to request
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param;
         return url;
     }
+
     private String requestDirection(String reqUrl) throws IOException {
         String responseString = "";
         InputStream inputStream = null;
         HttpURLConnection httpURLConnection = null;
-        try{
+        try {
             URL url = new URL(reqUrl);
             httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.connect();
@@ -174,10 +172,11 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
         }
         return responseString;
     }
+
     @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
+        switch (requestCode) {
             case LOCATION_REQUEST:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mMap.setMyLocationEnabled(true);
@@ -185,6 +184,7 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
                 break;
         }
     }
+
     public class TaskRequestDirections extends AsyncTask<String, Void, String> {
 
         @Override
@@ -195,7 +195,7 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return  responseString;
+            return responseString;
         }
 
         @Override
@@ -206,7 +206,8 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
             taskParser.execute(s);
         }
     }
-    public class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>> > {
+
+    public class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>>> {
 
         @Override
         protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
@@ -238,7 +239,7 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
                     double lat = Double.parseDouble(point.get("lat"));
                     double lon = Double.parseDouble(point.get("lon"));
 
-                    points.add(new LatLng(lat,lon));
+                    points.add(new LatLng(lat, lon));
                 }
 
                 polylineOptions.addAll(points);
@@ -247,7 +248,7 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
                 polylineOptions.geodesic(true);
             }
 
-            if (polylineOptions!=null) {
+            if (polylineOptions != null) {
                 mMap.addPolyline(polylineOptions);
             } else {
                 Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
@@ -255,10 +256,6 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
 
         }
     }
-
-
-
-
 
 
 }

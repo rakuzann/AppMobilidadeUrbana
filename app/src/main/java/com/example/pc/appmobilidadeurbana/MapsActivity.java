@@ -13,15 +13,21 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
+
 
 import com.example.pc.appmobilidadeurbana.objetos.DirectionsParser;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -46,8 +52,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
+    //Variaveis Mapa
     private GoogleMap mMap;
     SearchView search;
     private static final int LOCATION_REQUEST = 500;
@@ -55,11 +62,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationManager lm;
     LatLng myPlace;
 
+    //Variaveis do NavigationDrawer
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle nToggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+
+        //Navigation Drawer
+        //------------- cenas da action bar -------------------
+
+        mDrawerLayout = findViewById(R.id.drawer_layouts);
+        NavigationView navigationView = findViewById(R.id.nav_viewr);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        nToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
+
+        mDrawerLayout.addDrawerListener(nToggle);
+        nToggle.syncState();
+
+
+        //-----------------------------------------------------
+        // Configurações Do Mapa
 
         //Configurar Location Manager e Fazer Catch Obrigatorio
         lm = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -75,17 +102,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         //Codigo para obter nossa localização (Tenta Usar a Net e o GPS )
-        if(lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+        if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
                     double lat = location.getLatitude();
                     double log = location.getLongitude();
-                    myPlace = new LatLng(lat,log);
+                    myPlace = new LatLng(lat, log);
                     Geocoder geocoder = new Geocoder(MapsActivity.this);
 
                     try {
-                        List<Address> list  = geocoder.getFromLocation(lat,log, 1);
+                        List<Address> list = geocoder.getFromLocation(lat, log, 1);
                         String str = list.get(0).getLocality();
                         mMap.addMarker(new MarkerOptions().position(myPlace).title(str));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(myPlace));
@@ -95,24 +122,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
 
                 }
+
                 @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {}
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                }
+
                 @Override
-                public void onProviderEnabled(String provider) {}
+                public void onProviderEnabled(String provider) {
+                }
+
                 @Override
-                public void onProviderDisabled(String provider) {}
+                public void onProviderDisabled(String provider) {
+                }
             });
-        } else if(lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+        } else if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
                     double lat = location.getLatitude();
                     double log = location.getLongitude();
-                    myPlace = new LatLng(lat,log);
+                    myPlace = new LatLng(lat, log);
                     Geocoder geocoder = new Geocoder(MapsActivity.this);
 
                     try {
-                        List<Address> list  = geocoder.getFromLocation(lat,log, 1);
+                        List<Address> list = geocoder.getFromLocation(lat, log, 1);
                         String str = list.get(0).getLocality();
                         mMap.addMarker(new MarkerOptions().position(myPlace).title(str));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(myPlace));
@@ -122,12 +155,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
 
                 }
+
                 @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {}
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                }
+
                 @Override
-                public void onProviderEnabled(String provider) {}
+                public void onProviderEnabled(String provider) {
+                }
+
                 @Override
-                public void onProviderDisabled(String provider) {}
+                public void onProviderDisabled(String provider) {
+                }
             });
         }
 
@@ -141,7 +180,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                pesquisarMapa ();
+                pesquisarMapa();
                 return false;
             }
 
@@ -165,6 +204,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    //NavigationDrawer Metodos
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_map:
+                Toast.makeText(this, "nav_map", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_account:
+                //Intent i = new Intent(this, Register.class);
+                //startActivity(i);
+                Toast.makeText(this, "nav_account", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_settings:
+                Toast.makeText(this, "nav_settings", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_taxi:
+                Toast.makeText(this, "nav_taxi", Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (nToggle.onOptionsItemSelected(item))
+            return true;
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    //Configuração dos Mapas Metodos
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -184,37 +261,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     //Utilizador escolhe uma localização para fazer uma rota desde da sua posição actual ate esta
-    public void pesquisarMapa () {
+    public void pesquisarMapa() {
 
-            mMap.clear();
+        mMap.clear();
 
-           //Obter dados do destino atraves do nome deste
-            String searchPlace = search.getQuery().toString();
+        //Obter dados do destino atraves do nome deste
+        String searchPlace = search.getQuery().toString();
 
-            Geocoder geocoder = new Geocoder(MapsActivity.this);
-            List<Address> list = new ArrayList<>();
+        Geocoder geocoder = new Geocoder(MapsActivity.this);
+        List<Address> list = new ArrayList<>();
 
-            try {
-                list = geocoder.getFromLocationName(searchPlace, 1);
-            } catch (IOException e) {
+        try {
+            list = geocoder.getFromLocationName(searchPlace, 1);
+        } catch (IOException e) {
 
-            }
+        }
 
 
-            //Verificar Se existe destino
-            if(list.size() >= 1){
-                //Obter Destino
-                Address address = list.get(0);
-                LatLng destino = new LatLng(address.getLatitude(), address.getLongitude());
+        //Verificar Se existe destino
+        if (list.size() >= 1) {
+            //Obter Destino
+            Address address = list.get(0);
+            LatLng destino = new LatLng(address.getLatitude(), address.getLongitude());
 
-               //Marcardor destino
-                mMap.addMarker(new MarkerOptions().position(destino).title("Destino"));
+            //Marcardor destino
+            mMap.addMarker(new MarkerOptions().position(destino).title("Destino"));
 
-               //Metodos de calcular a rota
-                String url = getRequestUrl(myPlace, destino);
-                TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-                taskRequestDirections.execute(url);
-            }if(list.size() >= 1){
+            //Metodos de calcular a rota
+            String url = getRequestUrl(myPlace, destino);
+            TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+            taskRequestDirections.execute(url);
+        }
+        if (list.size() >= 1) {
             //Obter Destino
             Address address = list.get(0);
             LatLng destino = new LatLng(address.getLatitude(), address.getLongitude());
@@ -228,147 +306,152 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             taskRequestDirections.execute(url);
         }
 
-
-
-
     }
 
-        public void searchBtn (View v ){
-        Intent mudar = new Intent(this, SearchActivity.class);
-        startActivity(mudar);
-        }
 
-        private String getRequestUrl(LatLng origin, LatLng dest) {
-            //Value of origin
-            String str_org = "origin=" + origin.latitude +","+origin.longitude;
-            //Value of destination
-            String str_dest = "destination=" + dest.latitude+","+dest.longitude;
-            //Set value enable the sensor
-            String sensor = "sensor=false";
-            //Mode for find direction
-            String mode = "mode=driving";
-            //Build the full param
-            String param = str_org +"&" + str_dest + "&" +sensor+"&" +mode;
-            //Output format
-            String output = "json";
-            //Create url to request
-            String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param;
-            return url;
+    private String getRequestUrl(LatLng origin, LatLng dest) {
+        //Value of origin
+        String str_org = "origin=" + origin.latitude + "," + origin.longitude;
+        //Value of destination
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        //Set value enable the sensor
+        String sensor = "sensor=false";
+        //Mode for find direction
+        String mode = "mode=driving";
+        //Build the full param
+        String param = str_org + "&" + str_dest + "&" + sensor + "&" + mode;
+        //Output format
+        String output = "json";
+        //Create url to request
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param;
+        return url;
+    }
+
+    private String requestDirection(String reqUrl) throws IOException {
+        String responseString = "";
+        InputStream inputStream = null;
+        HttpURLConnection httpURLConnection = null;
+        try {
+            URL url = new URL(reqUrl);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.connect();
+
+            //Get the response result
+            inputStream = httpURLConnection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            StringBuffer stringBuffer = new StringBuffer();
+            String line = "";
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuffer.append(line);
+            }
+
+            responseString = stringBuffer.toString();
+            bufferedReader.close();
+            inputStreamReader.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            httpURLConnection.disconnect();
         }
-        private String requestDirection(String reqUrl) throws IOException {
+        return responseString;
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_REQUEST:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mMap.setMyLocationEnabled(true);
+                }
+                break;
+        }
+    }
+
+
+    public class TaskRequestDirections extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
             String responseString = "";
-            InputStream inputStream = null;
-            HttpURLConnection httpURLConnection = null;
-            try{
-                URL url = new URL(reqUrl);
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.connect();
-
-                //Get the response result
-                inputStream = httpURLConnection.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-                StringBuffer stringBuffer = new StringBuffer();
-                String line = "";
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuffer.append(line);
-                }
-
-                responseString = stringBuffer.toString();
-                bufferedReader.close();
-                inputStreamReader.close();
-
-            } catch (Exception e) {
+            try {
+                responseString = requestDirection(strings[0]);
+            } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-                httpURLConnection.disconnect();
             }
             return responseString;
         }
-        @SuppressLint("MissingPermission")
+
         @Override
-        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-            switch (requestCode){
-                case LOCATION_REQUEST:
-                    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        mMap.setMyLocationEnabled(true);
-                    }
-                    break;
-            }
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            //Parse json here
+            TaskParser taskParser = new TaskParser();
+            taskParser.execute(s);
         }
-        public class TaskRequestDirections extends AsyncTask<String, Void, String> {
+    }
 
-            @Override
-            protected String doInBackground(String... strings) {
-                String responseString = "";
-                try {
-                    responseString = requestDirection(strings[0]);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return  responseString;
+    public class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>>> {
+
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
+            JSONObject jsonObject = null;
+            List<List<HashMap<String, String>>> routes = null;
+            try {
+                jsonObject = new JSONObject(strings[0]);
+                DirectionsParser directionsParser = new DirectionsParser();
+                routes = directionsParser.parse(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                //Parse json here
-                TaskParser taskParser = new TaskParser();
-                taskParser.execute(s);
-            }
-        }
-        public class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>> > {
-
-            @Override
-            protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
-                JSONObject jsonObject = null;
-                List<List<HashMap<String, String>>> routes = null;
-                try {
-                    jsonObject = new JSONObject(strings[0]);
-                    DirectionsParser directionsParser = new DirectionsParser();
-                    routes = directionsParser.parse(jsonObject);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return routes;
-            }
-
-            @Override
-            protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
-                //Get list route and display it into the map
-
-                ArrayList points = null;
-
-                PolylineOptions polylineOptions = null;
-
-                for (List<HashMap<String, String>> path : lists) {
-                    points = new ArrayList();
-                    polylineOptions = new PolylineOptions();
-
-                    for (HashMap<String, String> point : path) {
-                        double lat = Double.parseDouble(point.get("lat"));
-                        double lon = Double.parseDouble(point.get("lon"));
-
-                        points.add(new LatLng(lat,lon));
-                    }
-
-                    polylineOptions.addAll(points);
-                    polylineOptions.width(15);
-                    polylineOptions.color(Color.BLUE);
-                    polylineOptions.geodesic(true);
-                }
-
-                if (polylineOptions!=null) {
-                    mMap.addPolyline(polylineOptions);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
-                }
-
-            }
+            return routes;
         }
 
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
+            //Get list route and display it into the map
+
+            ArrayList points = null;
+
+            PolylineOptions polylineOptions = null;
+
+            for (List<HashMap<String, String>> path : lists) {
+                points = new ArrayList();
+                polylineOptions = new PolylineOptions();
+
+                for (HashMap<String, String> point : path) {
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lon = Double.parseDouble(point.get("lon"));
+
+                    points.add(new LatLng(lat, lon));
+                }
+
+                polylineOptions.addAll(points);
+                polylineOptions.width(15);
+                polylineOptions.color(Color.BLUE);
+                polylineOptions.geodesic(true);
+            }
+
+            if (polylineOptions != null) {
+                mMap.addPolyline(polylineOptions);
+            } else {
+                Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
+
+    //Intents
+
+    public void searchBtn(View v) {
+        Intent mudar = new Intent(this, SearchActivity.class);
+        startActivity(mudar);
+    }
 }
