@@ -24,13 +24,13 @@ import java.util.ArrayList;
 
 public class server {
 
-    public static Utilizador postLoginHttp (String user, String pass) {
+    public static Utilizador postLoginHttp(String user, String pass) {
         Utilizador utilizador = null;
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/getLogin.php");
 
         try {
-            ArrayList<NameValuePair> val = new ArrayList <NameValuePair>();
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
 
             val.add(new BasicNameValuePair("username", user));
             val.add(new BasicNameValuePair("password", pass));
@@ -43,7 +43,7 @@ public class server {
             try {
                 final String resp = EntityUtils.toString(resposta.getEntity());
                 JSONObject reader = new JSONObject(resp);
-                JSONArray userJSon  = reader.getJSONArray("user");
+                JSONArray userJSon = reader.getJSONArray("user");
 
 
                 if (userJSon.length() > 0)
@@ -59,21 +59,20 @@ public class server {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        } catch (ClientProtocolException e) {
+        } catch (IOException e) {
         }
-
-        catch (ClientProtocolException e) {}
-        catch (IOException e) {}
 
         return utilizador;
     }
 
-    public static boolean existeUser (String user) {
+    public static boolean existeUser(String user) {
         Utilizador utilizador = null;
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/getUser.php");
 
         try {
-            ArrayList<NameValuePair> val = new ArrayList <NameValuePair>();
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
 
             val.add(new BasicNameValuePair("username", user));
 
@@ -85,12 +84,12 @@ public class server {
             try {
                 final String resp = EntityUtils.toString(resposta.getEntity());
                 JSONObject reader = new JSONObject(resp);
-                JSONArray userJSon  = reader.getJSONArray("user");
+                JSONArray userJSon = reader.getJSONArray("user");
 
 
                 if (userJSon.length() > 0)
                     if (!userJSon.getJSONObject(0).getString("username").isEmpty()) {
-                            return true;
+                        return true;
                     }
 
             } catch (IOException e) {
@@ -98,15 +97,14 @@ public class server {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        } catch (ClientProtocolException e) {
+        } catch (IOException e) {
         }
-
-        catch (ClientProtocolException e) {}
-        catch (IOException e) {}
 
         return false;
     }
 
-    public static void postRegisterHttp (String user, String pass, String nome, String email) {
+    public static void postRegisterHttp(String user, String pass, String nome, String email) {
 
         Utilizador utilizador = null;
         HttpClient httpClient = new DefaultHttpClient();
@@ -114,7 +112,7 @@ public class server {
 
         try {
 
-            ArrayList<NameValuePair> val = new ArrayList <NameValuePair>();
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
 
             val.add(new BasicNameValuePair("username", user));
             val.add(new BasicNameValuePair("password", pass));
@@ -125,11 +123,9 @@ public class server {
             httpPost.setEntity(new UrlEncodedFormEntity(val));
             httpClient.execute(httpPost);
 
-        }
-        catch (ClientProtocolException e) {
+        } catch (ClientProtocolException e) {
             e.printStackTrace();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
