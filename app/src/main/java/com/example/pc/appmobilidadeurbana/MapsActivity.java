@@ -72,6 +72,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
 
+
+
+
+
         //Navigation Drawer
         //------------- cenas da action bar -------------------
 
@@ -194,16 +198,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.mapa);
-        mapFragment.getMapAsync(this);
-
-
 
         //Array para localizar dois pontos funcionar
         listPoints = new ArrayList<>();
 
+
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.mapa);
+        mapFragment.getMapAsync(this);
 
     }
 
