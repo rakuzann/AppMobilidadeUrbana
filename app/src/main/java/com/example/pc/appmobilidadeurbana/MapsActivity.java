@@ -65,6 +65,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Variaveis do NavigationDrawer
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle nToggle;
+    boolean verificarPonto = false;
+
+
+    //Variaveis Adicionar favoritos
+    Double latitudeFav, longitudeFav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -267,7 +272,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Utilizador escolhe uma localização para fazer uma rota desde da sua posição actual ate esta
     public void pesquisarMapa() {
 
+        verificarPonto = true;
+
         mMap.clear();
+        mMap.addMarker(new MarkerOptions().position(myPlace).title("Origem"));
 
         //Obter dados do destino atraves do nome deste
         String searchPlace = search.getQuery().toString();
@@ -295,20 +303,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String url = getRequestUrl(myPlace, destino);
             TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
             taskRequestDirections.execute(url);
-        }
-        if (list.size() >= 1) {
-            //Obter Destino
-            Address address = list.get(0);
-            LatLng destino = new LatLng(address.getLatitude(), address.getLongitude());
 
-            //Marcardor destino
-            mMap.addMarker(new MarkerOptions().position(destino).title("Destino"));
 
-            //Metodos de calcular a rota
-            String url = getRequestUrl(myPlace, destino);
-            TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-            taskRequestDirections.execute(url);
+            //Dados para variaveis dos Favoritos
+            latitudeFav = address.getLatitude();
+            longitudeFav = address.getLongitude();
         }
+
 
     }
 
@@ -457,5 +458,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void searchBtn(View v) {
         Intent mudar = new Intent(this, SearchActivity.class);
         startActivity(mudar);
+    }
+
+    public void addFavoritos (View v){
+
+        Double lat = latitudeFav;
+        Double log = longitudeFav;
+
+        if(!verificarPonto ){
+            Toast.makeText(this,"ERRO",Toast.LENGTH_SHORT).show();
+        }else{
+
+        }
+
+
     }
 }
