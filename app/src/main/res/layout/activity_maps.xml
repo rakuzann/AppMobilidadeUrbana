@@ -63,6 +63,7 @@
     </android.support.constraint.ConstraintLayout>
 
 
+
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_viewr"
         android:layout_width="wrap_content"

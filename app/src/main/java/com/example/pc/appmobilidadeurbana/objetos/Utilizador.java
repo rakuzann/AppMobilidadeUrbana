@@ -19,6 +19,7 @@ public class Utilizador implements Serializable {
         this.email = email;
     }
 
+
     public String getNome() {
         return nome;
     }
