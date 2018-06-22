@@ -9,8 +9,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pc.appmobilidadeurbana.objetos.Favorito;
 import com.example.pc.appmobilidadeurbana.objetos.Utilizador;
 import com.example.pc.appmobilidadeurbana.objetos.server;
+
+import java.util.ArrayList;
 
 public class testes extends AppCompatActivity {
 
@@ -36,9 +39,11 @@ public class testes extends AppCompatActivity {
 
         new Thread(){
             public void run (){
-                server.postFavorito(user.getText().toString(),password.getText().toString(),"2");
+                ArrayList<Favorito> aFav = server.postHttpGetFavoritos(user.getText().toString());
 
-
+                for(Favorito f:aFav){
+                    Log.d("dw",String.valueOf(f.getId()));
+                }
             }
         }.start();
 

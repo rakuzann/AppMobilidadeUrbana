@@ -158,30 +158,45 @@ public class server {
 
     }
 
-    public static ArrayList<Favorito> postHttpGetFavoritos() {
-        Favorito pi = null;
-        ArrayList<Favorito> arrayPI = new ArrayList<>();
+    public static ArrayList<Favorito> postHttpGetFavoritos(String id_user) {
+        Favorito favorito = null;
+        ArrayList<Favorito> arrayFav = new ArrayList<>();
 
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/getFavoritos.php");
 
         try {
+
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
+
+            val.add(new BasicNameValuePair("user", id_user));
+
+            httpPost.setEntity(new UrlEncodedFormEntity(val));
+
             HttpResponse resposta = httpClient.execute(httpPost);
 
             try {
                 final String resp = EntityUtils.toString(resposta.getEntity());
                 JSONObject reader = new JSONObject(resp);
-                JSONArray piJSon  = reader.getJSONArray("PI");
+                JSONArray favJSon  = reader.getJSONArray("FAV");
 
-                for (int i = 0; i < piJSon.length(); i++) {
-                    pi = new Favorito();
+                for (int i = 0; i < favJSon.getJSONArray(0).length(); i++) {
+                    favorito = new Favorito();
 
-                    pi.setId(piJSon.getJSONObject(0).getInt("id"));
-                    pi.setLatitude(piJSon.getJSONObject(0).getDouble("latitude"));
-                    pi.setLongitude(piJSon.getJSONObject(0).getDouble("longitude"));
-                    pi.setId_user(piJSon.getJSONObject(0).getInt("id_utilizador"));
+                    JSONObject idk = (JSONObject)favJSon.getJSONArray(0).getJSONObject(i);
 
-                    arrayPI.add(pi);
+                    favorito.setId(idk.getInt("id"));
+                    favorito.setLatitude(idk.getDouble("latitude"));
+                    favorito.setLongitude(idk.getDouble("longitude"));
+                    favorito.setId_user(idk.getInt("id_utilizador"));
+
+                    Log.d("teste",String.valueOf(favorito.getLatitude()));
+                    //favorito.setId(favJSon.getJSONObject(0).getInt("id"));
+                    //favorito.setLatitude(favJSon.getJSONObject(0).getDouble("latitude"));
+                    //favorito.setLongitude(favJSon.getJSONObject(0).getDouble("longitude"));
+                    //favorito.setId_user(favJSon.getJSONObject(0).getInt("id_utilizador"));
+
+                    arrayFav.add(favorito);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -194,7 +209,7 @@ public class server {
         catch (ClientProtocolException e) {}
         catch (IOException e) {}
 
-        return arrayPI;
+        return arrayFav;
     }
 
 }
