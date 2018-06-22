@@ -37,7 +37,7 @@ public class testes extends AppCompatActivity {
         new Thread(){
             public void run (){
                 server.postFavorito(user.getText().toString(),password.getText().toString(),"2");
-                
+
 
             }
         }.start();
