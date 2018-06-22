@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.pc.appmobilidadeurbana.objetos.DirectionsParser;
@@ -49,7 +48,7 @@ public class SearchMapActivity extends FragmentActivity implements OnMapReadyCal
         setContentView(R.layout.activity_search_map);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.mapa);
         mapFragment.getMapAsync(this);
 
         //Array para localizar dois pontos funcionar

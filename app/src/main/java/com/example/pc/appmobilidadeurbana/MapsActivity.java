@@ -2,7 +2,6 @@ package com.example.pc.appmobilidadeurbana;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -20,22 +19,17 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 
 import com.example.pc.appmobilidadeurbana.objetos.DirectionsParser;
-import com.example.pc.appmobilidadeurbana.objetos.server;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -56,7 +50,7 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     //Variaveis Mapa
-    private GoogleMap mMap;
+    private GoogleMap mMapa;
     SearchView search;
     private static final int LOCATION_REQUEST = 500;
     ArrayList<LatLng> listPoints;
@@ -120,9 +114,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     try {
                         List<Address> list = geocoder.getFromLocation(lat, log, 1);
                         String str = list.get(0).getLocality();
-                        mMap.addMarker(new MarkerOptions().position(myPlace).title(str));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(myPlace));
-                        mMap.moveCamera(CameraUpdateFactory.zoomTo(16.0f));
+                        mMapa.addMarker(new MarkerOptions().position(myPlace).title(str));
+                        mMapa.moveCamera(CameraUpdateFactory.newLatLng(myPlace));
+                        mMapa.moveCamera(CameraUpdateFactory.zoomTo(16.0f));
                     } catch (IOException e) {
 
                     }
@@ -154,9 +148,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     try {
                         List<Address> list = geocoder.getFromLocation(lat, log, 1);
                         String str = list.get(0).getLocality();
-                        mMap.addMarker(new MarkerOptions().position(myPlace).title(str));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(myPlace));
-                        mMap.moveCamera(CameraUpdateFactory.zoomTo(16.0f));
+                        mMapa.addMarker(new MarkerOptions().position(myPlace).title(str));
+                        mMapa.moveCamera(CameraUpdateFactory.newLatLng(myPlace));
+                        mMapa.moveCamera(CameraUpdateFactory.zoomTo(16.0f));
                     } catch (IOException e) {
 
                     }
@@ -202,8 +196,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.mapa);
         mapFragment.getMapAsync(this);
+
 
 
         //Array para localizar dois pontos funcionar
@@ -259,15 +254,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        mMap = googleMap;
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMapa = googleMap;
+
+        mMapa.getUiSettings().setZoomControlsEnabled(true);
 
         //Activar Localizador Automatico do Google
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST);
             return;
         }
-        mMap.setMyLocationEnabled(true);
+        mMapa.setMyLocationEnabled(true);
 
 
     }
@@ -279,8 +275,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Boolean de adicionar favoritos
         verificarPonto = false;
 
-        mMap.clear();
-        mMap.addMarker(new MarkerOptions().position(myPlace).title("Origem"));
+        mMapa.clear();
+        mMapa.addMarker(new MarkerOptions().position(myPlace).title("Origem"));
 
         //Obter dados do destino atraves do nome deste
         String searchPlace = search.getQuery().toString();
@@ -305,7 +301,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng destino = new LatLng(address.getLatitude(), address.getLongitude());
 
             //Marcardor destino
-            mMap.addMarker(new MarkerOptions().position(destino).title("Destino"));
+            mMapa.addMarker(new MarkerOptions().position(destino).title("Destino"));
 
             //Metodos de calcular a rota
             String url = getRequestUrl(myPlace, destino);
@@ -380,12 +376,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         switch (requestCode) {
             case LOCATION_REQUEST:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mMap.setMyLocationEnabled(true);
+                    mMapa.setMyLocationEnabled(true);
                 }
                 break;
         }
     }
-
 
     public class TaskRequestDirections extends AsyncTask<String, Void, String> {
 
@@ -451,7 +446,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
             if (polylineOptions != null) {
-                mMap.addPolyline(polylineOptions);
+                mMapa.addPolyline(polylineOptions);
             } else {
                 Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
             }
@@ -477,15 +472,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } else {
 
         }
-
-        new Thread(){
-            public void run (){
-                server.postFavorito(latitudeFav.toString(),longitudeFav.toString(),"2");
-
-            }
-        }.start();
-
-
 
     }
 }
