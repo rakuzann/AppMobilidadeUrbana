@@ -69,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     //Variaveis Adicionar favoritos
-    Double latitudeFav, longitudeFav;
+    double latitudeFav, longitudeFav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,7 +269,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMyLocationEnabled(true);
 
 
-
     }
 
 
@@ -311,7 +310,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String url = getRequestUrl(myPlace, destino);
             TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
             taskRequestDirections.execute(url);
-
 
             //Dados para variaveis dos Favoritos
             latitudeFav = address.getLatitude();
@@ -468,14 +466,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(mudar);
     }
 
-    public void addFavoritos (View v){
+    public void addFavoritos(View v) {
 
-        Double lat = latitudeFav;
-        Double log = longitudeFav;
+        double lat = latitudeFav;
+        double log = longitudeFav;
 
-        if(!verificarPonto ){
-            Toast.makeText(this,"ERRO",Toast.LENGTH_SHORT).show();
-        }else{
+        if (!verificarPonto) {
+            Toast.makeText(this, "ERRO", Toast.LENGTH_SHORT).show();
+        } else {
 
         }
 
