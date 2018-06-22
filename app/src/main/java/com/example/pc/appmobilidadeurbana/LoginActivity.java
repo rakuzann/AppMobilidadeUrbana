@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (utilizador != null) {
 
-                    Intent mudar = new Intent(LoginActivity.this, MainActivity.class);
+                    Intent mudar = new Intent(LoginActivity.this, MapsActivity.class);
                     mudar.putExtra("utilizador", utilizador);
                     startActivity(mudar);
 
