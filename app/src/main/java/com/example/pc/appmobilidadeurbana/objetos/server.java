@@ -188,6 +188,7 @@ public class server {
                     favorito.setId(idk.getInt("id"));
                     favorito.setLatitude(idk.getDouble("latitude"));
                     favorito.setLongitude(idk.getDouble("longitude"));
+                    favorito.setNome(idk.getString("nome"));
                     favorito.setId_user(idk.getInt("id_utilizador"));
 
                     //favorito.setId(favJSon.getJSONObject(0).getInt("id"));

@@ -7,15 +7,18 @@ public class Favorito implements Serializable {
     private int id;
     private Double latitude;
     private Double longitude;
+    private String nome;
     private int id_user;
+
 
     public Favorito() {
     }
 
-    public Favorito(int id,Double latitude,Double longitude,int id_user ) {
+    public Favorito(int id,Double latitude,Double longitude,String nome,int id_user ) {
         this.id=id;
         this.latitude=latitude;
         this.longitude=longitude;
+        this.nome=nome;
         this.id_user=id_user;
     }
 
@@ -25,6 +28,14 @@ public class Favorito implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public Double getLatitude() {
