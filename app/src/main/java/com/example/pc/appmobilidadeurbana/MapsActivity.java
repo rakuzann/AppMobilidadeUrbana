@@ -88,10 +88,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         utilizador = (Utilizador) getIntent().getSerializableExtra("utilizador");
 
 
-
-
-
-
         //Navigation Drawer
         //------------- cenas da action bar -------------------
 
@@ -248,7 +244,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivity(i);
                 break;
             case R.id.nav_favorite:
-                Toast.makeText(this, "nav_favorite", Toast.LENGTH_SHORT).show();
+                Intent fav = new Intent(this, PontosFavoritosActivity.class);
+                fav.putExtra("utilizador",utilizador);
+                startActivity(fav);
                 break;
 
 

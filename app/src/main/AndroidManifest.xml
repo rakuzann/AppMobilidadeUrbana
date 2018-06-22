@@ -49,7 +49,8 @@
             android:name=".SearchMapActivity"
             android:label="@string/title_activity_search_map" />
         <activity android:name=".TaxiActivity" />
-        <activity android:name=".InfoActivity"></activity>
+        <activity android:name=".InfoActivity" />
+        <activity android:name=".PontosFavoritosActivity"></activity>
     </application>
 
 </manifest>
