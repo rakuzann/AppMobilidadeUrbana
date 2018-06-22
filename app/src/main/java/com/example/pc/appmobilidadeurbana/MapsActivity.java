@@ -217,8 +217,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivity(x);
                 break;
             case R.id.nav_account:
-                //Intent i = new Intent(this, Register.class);
-                //startActivity(i);
                 Toast.makeText(this, "nav_account", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_settings:
