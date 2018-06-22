@@ -66,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_taxi:
                 Toast.makeText(this, "nav_taxi", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.nav_favorite:
+                Toast.makeText(this, "nav_favorite", Toast.LENGTH_SHORT).show();
+                break;
 
         }
 

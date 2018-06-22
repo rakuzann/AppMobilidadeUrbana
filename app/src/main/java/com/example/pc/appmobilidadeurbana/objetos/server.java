@@ -131,4 +131,30 @@ public class server {
 
     }
 
+    public static void postFavorito(String latitude, String longitude, String id_user) {
+
+        Utilizador utilizador = null;
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/addFavorito.php");
+
+        try {
+
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
+
+            val.add(new BasicNameValuePair("latitude", latitude));
+            val.add(new BasicNameValuePair("longitude", longitude));
+            val.add(new BasicNameValuePair("iduser", id_user));
+
+
+            httpPost.setEntity(new UrlEncodedFormEntity(val));
+            httpClient.execute(httpPost);
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
