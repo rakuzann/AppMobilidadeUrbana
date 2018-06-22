@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 
 import com.example.pc.appmobilidadeurbana.objetos.DirectionsParser;
+import com.example.pc.appmobilidadeurbana.objetos.server;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -474,6 +475,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }else{
 
         }
+
+        new Thread(){
+            public void run (){
+                server.postFavorito(latitudeFav.toString(),longitudeFav.toString(),"2");
+
+            }
+        }.start();
+
 
 
     }
