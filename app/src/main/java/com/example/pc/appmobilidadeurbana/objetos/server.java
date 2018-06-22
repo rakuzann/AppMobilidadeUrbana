@@ -157,4 +157,42 @@ public class server {
 
     }
 
+    public static ArrayList<Favorito> postHttpGetFavoritos() {
+        Favorito pi = null;
+        ArrayList<Favorito> arrayPI = new ArrayList<>();
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/getFavoritos.php");
+
+        try {
+            HttpResponse resposta = httpClient.execute(httpPost);
+
+            try {
+                final String resp = EntityUtils.toString(resposta.getEntity());
+                JSONObject reader = new JSONObject(resp);
+                JSONArray piJSon  = reader.getJSONArray("PI");
+
+                for (int i = 0; i < piJSon.length(); i++) {
+                    pi = new Favorito();
+
+                    pi.setId(piJSon.getJSONObject(0).getInt("id"));
+                    pi.setLatitude(piJSon.getJSONObject(0).getDouble("latitude"));
+                    pi.setLongitude(piJSon.getJSONObject(0).getDouble("longitude"));
+                    pi.setId_user(piJSon.getJSONObject(0).getInt("id_utilizador"));
+
+                    arrayPI.add(pi);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        catch (ClientProtocolException e) {}
+        catch (IOException e) {}
+
+        return arrayPI;
+    }
+
 }
