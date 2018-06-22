@@ -49,6 +49,7 @@ public class server {
                 if (userJSon.length() > 0)
                     if (!userJSon.getJSONObject(0).getString("username").isEmpty()) {
                         utilizador = new Utilizador();
+                        utilizador.setId(userJSon.getJSONObject(0).getInt("id"));
                         utilizador.setUsername(userJSon.getJSONObject(0).getString("username"));
                         utilizador.setNome(userJSon.getJSONObject(0).getString("nome"));
                         utilizador.setPassword(userJSon.getJSONObject(0).getString("password"));

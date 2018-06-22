@@ -25,7 +25,7 @@
         android:layout_marginTop="16dp"
         android:foregroundGravity="center"
         android:gravity="center"
-        android:text="TextView"
+        android:text="Loading"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
