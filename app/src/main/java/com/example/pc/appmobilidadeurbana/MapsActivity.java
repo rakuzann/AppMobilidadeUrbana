@@ -226,6 +226,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent i = new Intent(this, TaxiActivity.class);
                 startActivity(i);
                 break;
+            case R.id.nav_favorite:
+                Toast.makeText(this, "nav_favorite", Toast.LENGTH_SHORT).show();
+                break;
+
 
         }
 
