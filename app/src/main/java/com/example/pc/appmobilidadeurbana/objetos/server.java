@@ -190,7 +190,6 @@ public class server {
                     favorito.setLongitude(idk.getDouble("longitude"));
                     favorito.setId_user(idk.getInt("id_utilizador"));
 
-                    Log.d("teste",String.valueOf(favorito.getLatitude()));
                     //favorito.setId(favJSon.getJSONObject(0).getInt("id"));
                     //favorito.setLatitude(favJSon.getJSONObject(0).getDouble("latitude"));
                     //favorito.setLongitude(favJSon.getJSONObject(0).getDouble("longitude"));
