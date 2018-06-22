@@ -276,7 +276,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Utilizador escolhe uma localização para fazer uma rota desde da sua posição actual ate esta
     public void pesquisarMapa() {
 
-        verificarPonto = true;
+        //Boolean de adicionar favoritos
+        verificarPonto = false;
 
         mMap.clear();
         mMap.addMarker(new MarkerOptions().position(myPlace).title("Origem"));
@@ -296,6 +297,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Verificar Se existe destino
         if (list.size() >= 1) {
+            //Boolean Para edicar se podemos adicionar locar aos favoritos
+            verificarPonto = true;
+
             //Obter Destino
             Address address = list.get(0);
             LatLng destino = new LatLng(address.getLatitude(), address.getLongitude());
