@@ -132,7 +132,7 @@ public class server {
 
     }
 
-    public static void postFavorito(String latitude, String longitude, String id_user) {
+    public static void postFavorito(String latitude, String longitude, String id_user,String nome_fav) {
 
         Utilizador utilizador = null;
         HttpClient httpClient = new DefaultHttpClient();
@@ -145,6 +145,7 @@ public class server {
             val.add(new BasicNameValuePair("latitude", latitude));
             val.add(new BasicNameValuePair("longitude", longitude));
             val.add(new BasicNameValuePair("iduser", id_user));
+            val.add(new BasicNameValuePair("nome", nome_fav));
 
 
             httpPost.setEntity(new UrlEncodedFormEntity(val));
@@ -210,6 +211,29 @@ public class server {
         catch (IOException e) {}
 
         return arrayFav;
+    }
+
+    public static void postDeleteFavorito(String id_fav) {
+
+        Utilizador utilizador = null;
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/deleteFavorito.php");
+
+        try {
+
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
+
+            val.add(new BasicNameValuePair("id_fav", id_fav));
+
+            httpPost.setEntity(new UrlEncodedFormEntity(val));
+            httpClient.execute(httpPost);
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

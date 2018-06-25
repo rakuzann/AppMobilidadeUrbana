@@ -519,11 +519,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(this, "ERRO", Toast.LENGTH_SHORT).show();
         } else {
 
-            new Thread() {
-                public void run() {
-                    server.postFavorito(String.valueOf(lat),String.valueOf(log),String.valueOf(utilizador.getId()));
-                }
-            }.start();
+
+            if(utilizador!=null){
+                Intent mudar = new Intent(this, addFavorito.class);
+                mudar.putExtra("lat", String.valueOf(lat));
+                mudar.putExtra("log", String.valueOf(log));
+                mudar.putExtra("id", String.valueOf(utilizador.getId()));
+                startActivity(mudar);
+            } else{
+                Toast.makeText(this,"É necessário o login!",Toast.LENGTH_SHORT).show();
+            }
+
+
+
+
         }
 
     }

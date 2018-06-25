@@ -39,11 +39,9 @@ public class testes extends AppCompatActivity {
 
         new Thread(){
             public void run (){
-                ArrayList<Favorito> aFav = server.postHttpGetFavoritos(user.getText().toString());
 
-                for(Favorito f:aFav){
-                    Log.d("dw",String.valueOf(f.getId()));
-                }
+                server.postDeleteFavorito(user.getText().toString());
+
             }
         }.start();
 
