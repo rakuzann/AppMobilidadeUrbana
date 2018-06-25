@@ -2,11 +2,7 @@ package com.example.pc.appmobilidadeurbana;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.pc.appmobilidadeurbana.objetos.Favorito;
 import com.example.pc.appmobilidadeurbana.objetos.Utilizador;
@@ -26,6 +22,10 @@ public class PontosFavoritosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pontos_favoritos);
+
+
+
+
 
 
 
@@ -54,8 +54,8 @@ public class PontosFavoritosActivity extends AppCompatActivity {
                             dados.add(aFav.get(i).getLatitude().toString());
                         }
 
-                        ListAdapter listAdapter = new ArrayAdapter<>(PontosFavoritosActivity.this, android.R.layout.simple_list_item_1, dados);
-                        lstView.setAdapter(listAdapter);
+                        ListViewAdapter adapter = new ListViewAdapter(PontosFavoritosActivity.this, aFav);
+                        lstView.setAdapter(adapter);
                     }
                 });
 
