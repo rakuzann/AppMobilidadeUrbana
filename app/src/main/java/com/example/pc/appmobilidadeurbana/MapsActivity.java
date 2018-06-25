@@ -32,6 +32,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -62,7 +63,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Variaveis do NavigationDrawer
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle nToggle;
+
+    //Variaveis de verificação
     boolean verificarPonto = false;
+    int markerMap = 0;
 
 
     //Variaveis Adicionar favoritos
@@ -256,7 +260,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -284,7 +287,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMapa.setMyLocationEnabled(true);
 
 
+
+
+        //Obter localização atraves de click no mapa
+
+        mMapa.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                mMapa.clear();
+                mMapa.addMarker(new MarkerOptions().position(myPlace).title("Origem"));
+                mMapa.addMarker(new MarkerOptions().position(latLng).title("Destino"));
+                markerMap++;
+                verificarPonto = true;
+
+                String url = getRequestUrl(myPlace, latLng);
+                TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+                taskRequestDirections.execute(url);
+
+
+                latitudeFav = latLng.latitude;
+                longitudeFav = latLng.longitude;
+
+            }
+        });
+
     }
+
 
 
     //Utilizador escolhe uma localização para fazer uma rota desde da sua posição actual ate esta
@@ -334,6 +362,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+
+    //Metodos do algoritmo do carro
 
     private String getRequestUrl(LatLng origin, LatLng dest) {
         //Value of origin
