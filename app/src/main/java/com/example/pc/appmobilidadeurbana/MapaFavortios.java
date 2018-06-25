@@ -43,9 +43,9 @@ public class MapaFavortios  extends FragmentActivity implements OnMapReadyCallba
 
     private GoogleMap mMap;
     private static final int LOCATION_REQUEST = 500;
-    LatLng origem, destino;
+    LatLng destino;
     LocationManager lm;
-    LatLng myPlace;
+    LatLng origem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,95 +53,11 @@ public class MapaFavortios  extends FragmentActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_mapa_favortios);
 
 
-        //-----------------------------------------------------
-        // Configurações Do Mapa
-
-        //Configurar Location Manager e Fazer Catch Obrigatorio
-        lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-
-        //Codigo para obter nossa localização (Tenta Usar a Net e o GPS )
-        if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    double lat = location.getLatitude();
-                    double log = location.getLongitude();
-                    myPlace = new LatLng(lat, log);
-                    Geocoder geocoder = new Geocoder(MapaFavortios.this);
-
-                    try {
-                        List<Address> list = geocoder.getFromLocation(lat, log, 1);
-                        String str = list.get(0).getLocality();
-
-                    } catch (IOException e) {
-
-                    }
-
-                    lm.removeUpdates(this);
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-                }
-
-                @Override
-                public void onProviderEnabled(String provider) {
-                }
-
-                @Override
-                public void onProviderDisabled(String provider) {
-                }
-            });
-        } else if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    double lat = location.getLatitude();
-                    double log = location.getLongitude();
-                    myPlace = new LatLng(lat, log);
-                    Geocoder geocoder = new Geocoder(MapaFavortios.this);
-
-                    try {
-                        List<Address> list = geocoder.getFromLocation(lat, log, 1);
-                        String str = list.get(0).getLocality();
-
-                    } catch (IOException e) {
-
-                    }
-
-                    lm.removeUpdates(this);
-
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-                }
-
-                @Override
-                public void onProviderEnabled(String provider) {
-                }
-
-                @Override
-                public void onProviderDisabled(String provider) {
-                }
-            });
-        }
-
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapa2);
         mapFragment.getMapAsync(this);
+
 
     }
 
@@ -157,30 +73,32 @@ public class MapaFavortios  extends FragmentActivity implements OnMapReadyCallba
         }
         mMap.setMyLocationEnabled(true);
 
+
         //Carregar Dados da Destino
         Double lat = getIntent().getDoubleExtra("lat",0);
         Double log = getIntent().getDoubleExtra("log",0);
         destino = new LatLng(lat, log);
-        mMap.addMarker(new MarkerOptions().position(destino).title("Origem"));
+        mMap.addMarker(new MarkerOptions().position(destino).title("Destino"));
 
 
-        if(myPlace != null) {
-            //Carregar Dados Origem
-            mMap.addMarker(new MarkerOptions().position(myPlace).title(""));
+        //Carregar Dados de Origem
+        Double myLat = getIntent().getDoubleExtra("myLat",0);
+        Double myLog = getIntent().getDoubleExtra("myLog",0);
+        origem = new LatLng(myLat,myLog);
+        mMap.addMarker(new MarkerOptions().position(origem).title("Origem"));
 
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(myPlace));
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(16.0f));
+        //Mover Camera
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(origem));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(16.0f));
+
+        //Calcular a rota
+        String url = getRequestUrl(origem, destino);
+        MapaFavortios.TaskRequestDirections taskCaminho = new MapaFavortios.TaskRequestDirections();
+        taskCaminho.execute(url);
 
 
-            //Calcular a rota
-            String url = getRequestUrl(myPlace, destino);
-            MapaFavortios.TaskRequestDirections taskCaminho = new MapaFavortios.TaskRequestDirections();
-            taskCaminho.execute(url);
-
-        }
 
     }
-
 
     //Metodos de calcular a rota
     private String getRequestUrl(LatLng origin, LatLng dest) {

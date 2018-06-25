@@ -17,6 +17,8 @@ public class PontosFavoritosActivity extends AppCompatActivity {
 
     ListView lstView;
 
+    Double latMyne, logMyne;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +28,8 @@ public class PontosFavoritosActivity extends AppCompatActivity {
 
 
 
-
+        latMyne = getIntent().getDoubleExtra("myLat",0);
+        logMyne = getIntent().getDoubleExtra("myLog",0);
 
 
         lstView = findViewById(R.id.listView);
@@ -47,15 +50,9 @@ public class PontosFavoritosActivity extends AppCompatActivity {
                     public void run() {
 
 
-
-                       //Apresentar dados na list view
-                        ArrayList<String> dados = new ArrayList<>();
-                        for(int i=0; i < aFav.size(); i++) {
-                            dados.add(aFav.get(i).getLatitude().toString());
-                        }
-
-                        ListViewAdapter adapter = new ListViewAdapter(PontosFavoritosActivity.this, aFav);
+                        ListViewAdapter adapter = new ListViewAdapter(PontosFavoritosActivity.this, aFav,latMyne, logMyne);
                         lstView.setAdapter(adapter);
+
                     }
                 });
 

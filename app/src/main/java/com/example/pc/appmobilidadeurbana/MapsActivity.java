@@ -58,7 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LOCATION_REQUEST = 500;
     ArrayList<LatLng> listPoints;
     LocationManager lm;
-    LatLng myPlace;
+    LatLng myPlace,destino;
 
     //Variaveis do NavigationDrawer
     private DrawerLayout mDrawerLayout;
@@ -80,14 +80,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-/*
-        //MERDAS RANDOM----------------------------------------------
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.mapa);
-        mapFragment.getMapAsync(this);
-
-*/
 
         utilizador = (Utilizador) getIntent().getSerializableExtra("utilizador");
 
@@ -250,6 +242,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             case R.id.nav_favorite:
                 Intent fav = new Intent(this, PontosFavoritosActivity.class);
                 fav.putExtra("utilizador",utilizador);
+                fav.putExtra("myLat",myPlace.latitude);
+                fav.putExtra("myLog",myPlace.longitude);
                 startActivity(fav);
                 break;
 
@@ -287,8 +281,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMapa.setMyLocationEnabled(true);
 
 
-
-
         //Obter localização atraves de click no mapa
 
         mMapa.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
@@ -310,6 +302,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
+
+
+
+
 
     }
 

@@ -17,17 +17,33 @@ import java.util.ArrayList;
 
 
 public class ListViewAdapter extends BaseAdapter {
-    Utilizador utilizador;
     Context context;
     ArrayList<Favorito> aFav;
-
+    double latitude, longitude;
 
     //public constructor
-    public ListViewAdapter(Context context, ArrayList<Favorito> aFav) {
+    public ListViewAdapter(Context context, ArrayList<Favorito> aFav, double latitude, double longitude) {
         this.context = context;
         this.aFav = aFav;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
     @Override
     public int getCount() {
@@ -50,6 +66,7 @@ public class ListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+
         // inflate the layout for each list row
         if (convertView == null) {
             convertView = LayoutInflater.from(context).
@@ -73,12 +90,24 @@ public class ListViewAdapter extends BaseAdapter {
                 Intent mudar = new Intent(v.getContext(), MapaFavortios.class);
                 mudar.putExtra("lat", aFav.get(position).getLatitude());
                 mudar.putExtra("log", aFav.get(position).getLongitude());
+                mudar.putExtra("myLat", getLatitude());
+                mudar.putExtra("myLog", getLongitude());
                 context.startActivity(mudar);
             }
         });
+
+
         btnRemoverFavorito.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                new Thread(){
+                    public void run (){
+                        server.postDeleteFavorito(String.valueOf(aFav.get(position).getId()));
+                        }
+                }.start();
+
 
             }
         });
