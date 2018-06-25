@@ -213,4 +213,27 @@ public class server {
         return arrayFav;
     }
 
+    public static void postDeleteFavorito(String id_fav) {
+
+        Utilizador utilizador = null;
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/deleteFavorito.php");
+
+        try {
+
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
+
+            val.add(new BasicNameValuePair("id_fav", id_fav));
+
+            httpPost.setEntity(new UrlEncodedFormEntity(val));
+            httpClient.execute(httpPost);
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
