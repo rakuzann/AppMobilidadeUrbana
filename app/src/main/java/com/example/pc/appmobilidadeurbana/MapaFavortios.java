@@ -43,7 +43,6 @@ public class MapaFavortios  extends FragmentActivity implements OnMapReadyCallba
 
     private GoogleMap mMap;
     private static final int LOCATION_REQUEST = 500;
-    ArrayList<LatLng> listPoints;
     LatLng origem, destino;
     LocationManager lm;
     LatLng myPlace;
@@ -52,10 +51,7 @@ public class MapaFavortios  extends FragmentActivity implements OnMapReadyCallba
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mapa_favortios);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.mapa2);
-        mapFragment.getMapAsync(this);
+
 
         //-----------------------------------------------------
         // Configurações Do Mapa
@@ -141,8 +137,11 @@ public class MapaFavortios  extends FragmentActivity implements OnMapReadyCallba
             });
         }
 
-        //Array para localizar dois pontos funcionar
-        listPoints = new ArrayList<>();
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.mapa2);
+        mapFragment.getMapAsync(this);
 
     }
 
@@ -164,17 +163,21 @@ public class MapaFavortios  extends FragmentActivity implements OnMapReadyCallba
         destino = new LatLng(lat, log);
         mMap.addMarker(new MarkerOptions().position(destino).title("Origem"));
 
-        //Carregar Dados Origem
-        mMap.addMarker(new MarkerOptions().position(myPlace).title(""));
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(myPlace));
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(16.0f));
+        if(myPlace != null) {
+            //Carregar Dados Origem
+            mMap.addMarker(new MarkerOptions().position(myPlace).title(""));
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(myPlace));
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(16.0f));
 
 
-        //Calcular a rota
-        String url = getRequestUrl(origem, destino);
-        MapaFavortios.TaskRequestDirections taskCaminho = new MapaFavortios.TaskRequestDirections();
-        taskCaminho.execute(url);
+            //Calcular a rota
+            String url = getRequestUrl(myPlace, destino);
+            MapaFavortios.TaskRequestDirections taskCaminho = new MapaFavortios.TaskRequestDirections();
+            taskCaminho.execute(url);
+
+        }
 
     }
 
