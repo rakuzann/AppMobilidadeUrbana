@@ -300,4 +300,54 @@ public class server {
         return false;
     }
 
+    public static ArrayList<Paragem> postHttpGetParagens(String id_rota) {
+        Paragem paragem = null;
+        ArrayList<Paragem> arrayParagens = new ArrayList<>();
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/getParagens.php");
+
+        try {
+
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
+
+            val.add(new BasicNameValuePair("rota", id_rota));
+
+            httpPost.setEntity(new UrlEncodedFormEntity(val));
+
+            HttpResponse resposta = httpClient.execute(httpPost);
+
+            try {
+                final String resp = EntityUtils.toString(resposta.getEntity());
+                JSONObject reader = new JSONObject(resp);
+                JSONArray favJSon  = reader.getJSONArray("Paragens");
+
+                for (int i = 0; i < favJSon.getJSONArray(0).length(); i++) {
+                    paragem = new Paragem();
+
+                    JSONObject idk = (JSONObject)favJSon.getJSONArray(0).getJSONObject(i);
+
+                    paragem.setId(idk.getInt("id"));
+                    paragem.setNome(idk.getString("nome"));
+                    paragem.setLatitude(idk.getDouble("latitude"));
+                    paragem.setLongitude(idk.getDouble("longitude"));
+                    paragem.setId_rota(3);
+                    paragem.setHorario(idk.getDouble("horario"));
+
+                    arrayParagens.add(paragem);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        catch (ClientProtocolException e) {}
+        catch (IOException e) {}
+
+        return arrayParagens;
+    }
+
 }

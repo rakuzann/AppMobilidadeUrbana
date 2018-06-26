@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pc.appmobilidadeurbana.objetos.Favorito;
+import com.example.pc.appmobilidadeurbana.objetos.Paragem;
 import com.example.pc.appmobilidadeurbana.objetos.Utilizador;
 import com.example.pc.appmobilidadeurbana.objetos.server;
 
@@ -40,12 +41,16 @@ public class testes extends AppCompatActivity {
         new Thread(){
             public void run (){
 
-                boolean lol = server.mesmaRota(user.getText().toString(),password.getText().toString());
+                ArrayList<Paragem> arrayPara =  server.postHttpGetParagens(user.getText().toString());
 
-                if(lol)
-                    Log.d("true","sao da mesma rota");
-                else
-                    Log.d("false","nao se encontram na mesma rota");
+
+                for(Paragem p:arrayPara){
+                    Log.d(p.getNome(),String.valueOf(p.getHorario()));
+                    Log.d(p.getNome(),String.valueOf(p.getLatitude()));
+                    Log.d(p.getNome(),String.valueOf(p.getLongitude()));
+                    Log.d(p.getNome(),String.valueOf(p.getId_rota()));
+                    Log.d("paragrafo","--------------------------------------");
+                }
 
 
             }
