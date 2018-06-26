@@ -111,7 +111,7 @@ public class ListViewAdapter extends BaseAdapter {
                         server.postDeleteFavorito(String.valueOf(aFav.get(position).getId()));
 
                     }
-                    
+
                 }.start();
             }
         });

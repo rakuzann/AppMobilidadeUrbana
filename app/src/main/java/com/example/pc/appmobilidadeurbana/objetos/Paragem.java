@@ -6,15 +6,15 @@ public class Paragem implements Serializable {
 
     private int id;
     private String nome;
-    private Double latitude;
-    private Double longitude;
+    private double latitude;
+    private double longitude;
     private int id_rota;
     private double horario;
 
     public Paragem() {
     }
 
-    public Paragem(int id,String nome, Double latitude, Double longitude,int id_rota, double horario) {
+    public Paragem(int id,String nome, double latitude, double longitude,int id_rota, double horario) {
         this.id = id;
         this.nome = nome;
         this.latitude = latitude;
@@ -55,19 +55,19 @@ public class Paragem implements Serializable {
         this.nome = nome;
     }
 
-    public Double getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 }

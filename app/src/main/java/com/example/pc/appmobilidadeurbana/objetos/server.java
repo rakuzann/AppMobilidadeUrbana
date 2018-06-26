@@ -236,7 +236,7 @@ public class server {
 
     }
 
-    public static int[] postGetRotasFromParagem(String id_rota) {
+    public static int[] postGetRotasFromParagem(String id_paragem) {
 
         int[] rotas = null;
 
@@ -247,7 +247,7 @@ public class server {
 
             ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
 
-            val.add(new BasicNameValuePair("id_rota", id_rota));
+            val.add(new BasicNameValuePair("id_rota", id_paragem));
 
             httpPost.setEntity(new UrlEncodedFormEntity(val));
 

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -19,6 +20,7 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
@@ -26,12 +28,15 @@ import android.widget.Toast;
 
 
 import com.example.pc.appmobilidadeurbana.objetos.DirectionsParser;
+import com.example.pc.appmobilidadeurbana.objetos.Favorito;
+import com.example.pc.appmobilidadeurbana.objetos.Paragem;
 import com.example.pc.appmobilidadeurbana.objetos.Utilizador;
 import com.example.pc.appmobilidadeurbana.objetos.server;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -72,6 +77,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Variaveis Adicionar favoritos
     double latitudeFav, longitudeFav;
 
+
+    //Variaveis de desenhar rota de autocarros
+    double latAnterior = 0;
+    double logAnterior = 0;
+    float distanciaOriginal = 40000;
+    int idProximaParagem;
+    int getIdProximaParagemDestino;
+
+    //Variavies das paragens mais proximas da origem e do destino
+    double paragemMaisProximaLatX, paragemMaisProximaLog;
+    String idParagemMaisProxima;
+
+   //array que vai buscar todas as paragens do mapa
+    ArrayList<Paragem> todasParagensMapa;
+
+   //Boolean que vai indicar se duas paragens pertecenm a mesma rota
+    boolean memaRota;
+
+
     //Utilizador
     Utilizador utilizador;
 
@@ -80,7 +104,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-
+        apanharParagens ();
 
 
         utilizador = (Utilizador) getIntent().getSerializableExtra("utilizador");
@@ -219,6 +243,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.mapa);
         mapFragment.getMapAsync(this);
 
+
     }
 
 
@@ -307,8 +332,184 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+    }
 
 
+
+    //Metodos
+
+    public void searchBtn(View v) {
+        Intent mudar = new Intent(this, SearchActivity.class);
+        startActivity(mudar);
+    }
+    public void addFavoritos(View v) {
+
+        final double lat = latitudeFav;
+        final double log = longitudeFav;
+
+        if (!verificarPonto) {
+            Toast.makeText(this, "ERRO", Toast.LENGTH_SHORT).show();
+        } else {
+
+
+            if(utilizador!=null){
+                Intent mudar = new Intent(this, addFavorito.class);
+                mudar.putExtra("lat", String.valueOf(lat));
+                mudar.putExtra("log", String.valueOf(log));
+                mudar.putExtra("id", String.valueOf(utilizador.getId()));
+                startActivity(mudar);
+            } else{
+                Toast.makeText(this,"É necessário o login!",Toast.LENGTH_SHORT).show();
+            }
+
+
+
+
+        }
+
+
+    }
+    //Cria array com as paragens todas do mapa
+    public void apanharParagens (){
+
+        new Thread(){
+            public void run (){
+
+
+                final ArrayList<Paragem> todasParagens = server.postHttpGetAllParagens();
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        todasParagensMapa = todasParagens;
+                    }
+                });
+
+
+            }
+        }.start();
+    }
+    public void verficarMesmaRota (String id1, String id2){
+        final String idRouta1 = id1;
+        final String idRouta2 = id2;
+
+        new Thread(){
+            public void run (){
+                memaRota = server.mesmaRota( idRouta1,idRouta2);
+            }
+        }.start();
+    }
+
+
+    public void paragemProximaMim (final LatLng ponto){
+
+        distanciaOriginal = 40000;
+
+
+        //Calcular Paragem mais proxima de Nos
+
+        for (int i = 0; i < todasParagensMapa.size(); i++){
+
+            double lat = todasParagensMapa.get(i).getLatitude();
+            double log = todasParagensMapa.get(i).getLongitude();
+
+
+            Location locationB = new Location("point B");
+            locationB.setLatitude(lat);
+            locationB.setLongitude(log);
+
+            Location locationA = new Location("point A");
+            locationA.setLatitude(ponto.latitude);
+            locationA.setLongitude(ponto.longitude);
+
+            float distancia = locationA.distanceTo(locationB);
+
+            if (distanciaOriginal > distancia) {
+                distanciaOriginal = distancia;
+                idProximaParagem = todasParagensMapa.get(i).getId();
+
+            }
+
+        }
+
+        for (int x = 0; x < todasParagensMapa.size(); x++){
+
+            double lat = todasParagensMapa.get(x).getLatitude();
+            double log = todasParagensMapa.get(x).getLongitude();
+            LatLng maisProxima = new LatLng(lat,log);
+            if(idProximaParagem == todasParagensMapa.get(x).getId()){
+                mMapa.addMarker(new MarkerOptions()
+                                .position(maisProxima)
+                                .title(todasParagensMapa.get(x).getNome())
+                        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_bus))
+                );
+
+                paragemMaisProximaLatX = todasParagensMapa.get(x).getLatitude();
+                paragemMaisProximaLog = todasParagensMapa.get(x).getLongitude();
+                idParagemMaisProxima = String.valueOf(todasParagensMapa.get(x).getId());
+
+
+            }
+        }
+
+
+    }
+
+    public void rotaAutocarros (){
+
+
+        new Thread(){
+            public void run (){
+                //obeter as paragens de uma rota
+                final ArrayList<Paragem> paragensRota = server.postHttpGetParagens("2");
+
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        for(int i = 0; i < paragensRota.size(); i++){
+
+
+
+                            //Variaveis da rota a ser pesquisada
+                            String titleParagem = paragensRota.get(i).getNome();
+                            String horarioParagem = String.valueOf( paragensRota.get(i).getHorario() );
+                            String idParagem = String.valueOf( paragensRota.get(i).getId());
+                            double latParagem = paragensRota.get(i).getLatitude();
+                            double logParagem = paragensRota.get(i).getLongitude();
+                            LatLng paragem = new LatLng(latParagem,logParagem);
+
+                            //Variavel da rota anterior
+                            LatLng paragemAnterior = new LatLng(latAnterior,logAnterior);
+
+                            //Desenhar no Mapa
+                            mMapa.addMarker(new MarkerOptions()
+                                            .position(paragem)
+                                            .title(titleParagem + " " + horarioParagem + " " + idParagem)
+                                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_bus))
+                            );
+
+                            if(i != 0 ) {
+                                String url = getRequestUrl(paragemAnterior, paragem);
+                                TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+                                taskRequestDirections.execute(url);
+                            }
+
+                            //Variaveis da rota anterior
+                            latAnterior =  paragensRota.get(i).getLatitude();
+                            logAnterior =  paragensRota.get(i).getLongitude();
+                        }
+
+
+                    }
+                });
+
+            }}
+                .start();
     }
 
 
@@ -318,50 +519,76 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Boolean de adicionar favoritos
         verificarPonto = false;
-
         mMapa.clear();
         mMapa.addMarker(new MarkerOptions().position(myPlace).title("Origem"));
 
-        //Obter dados do destino atraves do nome deste
-        String searchPlace = search.getQuery().toString();
 
+        //Obter dados do destino atraves do nome deste
+        String searchPlace = search.getQuery().toString() + " Castelo Branco";
         Geocoder geocoder = new Geocoder(MapsActivity.this);
         List<Address> list = new ArrayList<>();
-
         try {
             list = geocoder.getFromLocationName(searchPlace, 1);
-        } catch (IOException e) {
-
-        }
+        } catch (IOException e) {}
 
 
         //Verificar Se existe destino
         if (list.size() >= 1) {
+
             //Boolean Para edicar se podemos adicionar locar aos favoritos
             verificarPonto = true;
+
+            //Marcado paragem mais proxima do utilizador
+            paragemProximaMim(myPlace);
+            LatLng nearMe = new LatLng(paragemMaisProximaLatX, paragemMaisProximaLog);
+            String idRouta1 = idParagemMaisProxima;
+
+            //Metodos calular rota a pe do origem
+            String urlOrigem = getRequestUrlWalking(myPlace, nearMe);
+            TaskRequestDirectionsWalking taskRequestDirectionsOrigem = new TaskRequestDirectionsWalking();
+            taskRequestDirectionsOrigem.execute(urlOrigem);
+
 
             //Obter Destino
             Address address = list.get(0);
             LatLng destino = new LatLng(address.getLatitude(), address.getLongitude());
 
-            //Marcardor destino
+            //Marcardor da paragem mais proxima do  destino
+            //mMapa.addMarker(new MarkerOptions().position(destino).title("Destino"));
+            paragemProximaMim(destino);
+            LatLng nearDestino = new LatLng(paragemMaisProximaLatX, paragemMaisProximaLog);
             mMapa.addMarker(new MarkerOptions().position(destino).title("Destino"));
+            String idRouta2 = idParagemMaisProxima;
+
+
+            //Metodos calular rota a pe do destion
+            String urlDestino = getRequestUrlWalking(nearDestino, destino);
+            TaskRequestDirectionsWalking taskRequestDirectionsDestino = new TaskRequestDirectionsWalking();
+            taskRequestDirectionsDestino.execute(urlDestino);
 
             //Metodos de calcular a rota
-            String url = getRequestUrl(myPlace, destino);
+            String url = getRequestUrl(nearMe, nearDestino);
             TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
             taskRequestDirections.execute(url);
+
 
             //Dados para variaveis dos Favoritos
             latitudeFav = address.getLatitude();
             longitudeFav = address.getLongitude();
+
+            verficarMesmaRota(idRouta1,idRouta2);
+            if(memaRota){
+
+            }
+
+
         }
 
 
     }
 
 
-    //Metodos do algoritmo do carro
+    //Metodos do algoritmo de desenhar linha de caminhos autocarro
 
     private String getRequestUrl(LatLng origin, LatLng dest) {
         //Value of origin
@@ -500,38 +727,132 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    //Metodos do algoritmo de desenhar linha de caminhos a pe
 
-    //Intents
-
-    public void searchBtn(View v) {
-        Intent mudar = new Intent(this, SearchActivity.class);
-        startActivity(mudar);
+    private String getRequestUrlWalking(LatLng origin, LatLng dest) {
+        //Value of origin
+        String str_org = "origin=" + origin.latitude + "," + origin.longitude;
+        //Value of destination
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        //Set value enable the sensor
+        String sensor = "sensor=false";
+        //Mode for find direction
+        String mode = "mode=walking";
+        //Build the full param
+        String param = str_org + "&" + str_dest + "&" + sensor + "&" + mode;
+        //Output format
+        String output = "json";
+        //Create url to request
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param;
+        return url;
     }
 
-    public void addFavoritos(View v) {
+    private String requestDirectionWalking(String reqUrl) throws IOException {
+        String responseString = "";
+        InputStream inputStream = null;
+        HttpURLConnection httpURLConnection = null;
+        try {
+            URL url = new URL(reqUrl);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.connect();
 
-        final double lat = latitudeFav;
-        final double log = longitudeFav;
+            //Get the response result
+            inputStream = httpURLConnection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-        if (!verificarPonto) {
-            Toast.makeText(this, "ERRO", Toast.LENGTH_SHORT).show();
-        } else {
-
-
-            if(utilizador!=null){
-                Intent mudar = new Intent(this, addFavorito.class);
-                mudar.putExtra("lat", String.valueOf(lat));
-                mudar.putExtra("log", String.valueOf(log));
-                mudar.putExtra("id", String.valueOf(utilizador.getId()));
-                startActivity(mudar);
-            } else{
-                Toast.makeText(this,"É necessário o login!",Toast.LENGTH_SHORT).show();
+            StringBuffer stringBuffer = new StringBuffer();
+            String line = "";
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuffer.append(line);
             }
 
+            responseString = stringBuffer.toString();
+            bufferedReader.close();
+            inputStreamReader.close();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            httpURLConnection.disconnect();
+        }
+        return responseString;
+    }
 
+    public class TaskRequestDirectionsWalking extends AsyncTask<String, Void, String> {
 
+        @Override
+        protected String doInBackground(String... strings) {
+            String responseString = "";
+            try {
+                responseString = requestDirectionWalking(strings[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return responseString;
         }
 
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            //Parse json here
+            TaskParserWalking taskParser = new TaskParserWalking();
+            taskParser.execute(s);
+        }
     }
+
+    public class TaskParserWalking extends AsyncTask<String, Void, List<List<HashMap<String, String>>>> {
+
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
+            JSONObject jsonObject = null;
+            List<List<HashMap<String, String>>> routes = null;
+            try {
+                jsonObject = new JSONObject(strings[0]);
+                DirectionsParser directionsParser = new DirectionsParser();
+                routes = directionsParser.parse(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return routes;
+        }
+
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
+            //Get list route and display it into the map
+
+            ArrayList points = null;
+
+            PolylineOptions polylineOptions = null;
+
+            for (List<HashMap<String, String>> path : lists) {
+                points = new ArrayList();
+                polylineOptions = new PolylineOptions();
+
+                for (HashMap<String, String> point : path) {
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lon = Double.parseDouble(point.get("lon"));
+
+                    points.add(new LatLng(lat, lon));
+                }
+
+                polylineOptions.addAll(points);
+                polylineOptions.width(15);
+                polylineOptions.color(Color.GREEN);
+                polylineOptions.geodesic(true);
+            }
+
+            if (polylineOptions != null) {
+                mMapa.addPolyline(polylineOptions);
+            } else {
+                Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
+
 }
