@@ -331,7 +331,7 @@ public class server {
                     paragem.setNome(idk.getString("nome"));
                     paragem.setLatitude(idk.getDouble("latitude"));
                     paragem.setLongitude(idk.getDouble("longitude"));
-                    paragem.setId_rota(3);
+                    paragem.setId_rota(Integer.parseInt(id_rota));
                     paragem.setHorario(idk.getDouble("horario"));
 
                     arrayParagens.add(paragem);
