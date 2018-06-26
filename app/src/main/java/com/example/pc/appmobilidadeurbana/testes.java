@@ -41,14 +41,12 @@ public class testes extends AppCompatActivity {
         new Thread(){
             public void run (){
 
-                ArrayList<Paragem> arrayPara =  server.postHttpGetParagens(user.getText().toString());
+                ArrayList<Paragem> arrayPara =  server.postHttpGetAllParagens();
 
 
                 for(Paragem p:arrayPara){
-                    Log.d(p.getNome(),String.valueOf(p.getHorario()));
                     Log.d(p.getNome(),String.valueOf(p.getLatitude()));
                     Log.d(p.getNome(),String.valueOf(p.getLongitude()));
-                    Log.d(p.getNome(),String.valueOf(p.getId_rota()));
                     Log.d("paragrafo","--------------------------------------");
                 }
 
