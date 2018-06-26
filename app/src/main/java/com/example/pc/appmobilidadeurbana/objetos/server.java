@@ -236,4 +236,68 @@ public class server {
 
     }
 
+    public static int[] postGetRotasFromParagem(String id_rota) {
+
+        int[] rotas = null;
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/getRotaFromParagem.php");
+
+        try {
+
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
+
+            val.add(new BasicNameValuePair("id_rota", id_rota));
+
+            httpPost.setEntity(new UrlEncodedFormEntity(val));
+
+            HttpResponse resposta = httpClient.execute(httpPost);
+
+
+            try {
+
+                final String resp = EntityUtils.toString(resposta.getEntity());
+                JSONObject reader = new JSONObject(resp);
+                JSONArray favJSon  = reader.getJSONArray("rotas");
+
+                rotas = new int[favJSon.getJSONArray(0).length()];
+
+                for (int i = 0; i < favJSon.getJSONArray(0).length(); i++) {
+
+                    JSONObject idk = (JSONObject)favJSon.getJSONArray(0).getJSONObject(i);
+
+                    rotas[i] = idk.getInt("id");
+
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        catch (ClientProtocolException e) {}
+        catch (IOException e) {}
+
+        return rotas;
+    }
+
+    public static boolean mesmaRota(String parA,String parB){
+
+        int[] rotasParagemA = postGetRotasFromParagem(parA);
+        int[] rotasParagemB = postGetRotasFromParagem(parB);
+
+        for(int i=0;i<rotasParagemA.length;i++){
+            for(int y=0;y<rotasParagemB.length;y++){
+
+                if(rotasParagemA[i]==rotasParagemB[y])
+                        return true;
+            }
+        }
+
+        return false;
+    }
+
 }

@@ -40,7 +40,13 @@ public class testes extends AppCompatActivity {
         new Thread(){
             public void run (){
 
-                server.postDeleteFavorito(user.getText().toString());
+                boolean lol = server.mesmaRota(user.getText().toString(),password.getText().toString());
+
+                if(lol)
+                    Log.d("true","sao da mesma rota");
+                else
+                    Log.d("false","nao se encontram na mesma rota");
+
 
             }
         }.start();
