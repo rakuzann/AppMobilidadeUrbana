@@ -1,5 +1,6 @@
 package com.example.pc.appmobilidadeurbana;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -21,12 +22,15 @@ public class ListViewAdapter extends BaseAdapter {
     ArrayList<Favorito> aFav;
     double latitude, longitude;
 
+
+
     //public constructor
     public ListViewAdapter(Context context, ArrayList<Favorito> aFav, double latitude, double longitude) {
         this.context = context;
         this.aFav = aFav;
         this.latitude = latitude;
         this.longitude = longitude;
+
     }
 
     public double getLatitude() {
@@ -105,10 +109,10 @@ public class ListViewAdapter extends BaseAdapter {
                 new Thread(){
                     public void run (){
                         server.postDeleteFavorito(String.valueOf(aFav.get(position).getId()));
-                        }
+
+                    }
+                    
                 }.start();
-
-
             }
         });
 

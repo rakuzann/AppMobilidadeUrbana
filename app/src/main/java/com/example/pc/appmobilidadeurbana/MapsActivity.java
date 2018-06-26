@@ -81,6 +81,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
 
+
+
         utilizador = (Utilizador) getIntent().getSerializableExtra("utilizador");
 
 

@@ -52,7 +52,6 @@ public class PontosFavoritosActivity extends AppCompatActivity {
 
                         ListViewAdapter adapter = new ListViewAdapter(PontosFavoritosActivity.this, aFav,latMyne, logMyne);
                         lstView.setAdapter(adapter);
-
                     }
                 });
 
