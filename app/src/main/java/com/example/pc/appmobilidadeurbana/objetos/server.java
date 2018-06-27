@@ -132,6 +132,34 @@ public class server {
 
     }
 
+    public static void postUpdateUser(String id,String user, String pass, String nome, String email) {
+
+        Utilizador utilizador = null;
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/updateUser.php");
+
+        try {
+
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
+
+            val.add(new BasicNameValuePair("id", id));
+            val.add(new BasicNameValuePair("username", user));
+            val.add(new BasicNameValuePair("password", pass));
+            val.add(new BasicNameValuePair("nome", nome));
+            val.add(new BasicNameValuePair("email", email));
+
+
+            httpPost.setEntity(new UrlEncodedFormEntity(val));
+            httpClient.execute(httpPost);
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void postFavorito(String latitude, String longitude, String id_user,String nome_fav) {
 
         Utilizador utilizador = null;
