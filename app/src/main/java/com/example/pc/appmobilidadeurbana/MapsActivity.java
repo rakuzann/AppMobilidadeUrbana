@@ -416,7 +416,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final String idRota = id;
         Thread th = new Thread(){
             public void run (){
-                todasParagensRotaCerta = server.postHttpGetParagens(idRota,"5.15");
+                todasParagensRotaCerta = server.postHttpGetParagens(idRota,"8.14");
             }
         };
 
@@ -595,9 +595,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             taskRequestDirectionsDestino.execute(urlDestino);
 
             //Metodos de calcular a rota
+            /*
             String url = getRequestUrl(nearMe, nearDestino);
             TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
             taskRequestDirections.execute(url);
+            */
 
 
             //Dados para variaveis dos Favoritos
@@ -610,8 +612,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             verficarMesmaRota(idParagem1,idParagem2);
             if(memaRota != -1){
                 obterRotaCerta(String.valueOf(memaRota));
-                
+
                 for (int i = 0; i < todasParagensRotaCerta.size(); i++){
+
+                    if(i == 0) {
+                        double latAnterior = myPlace.latitude;
+                        double logAnterior = myPlace.longitude;
+                    }
+                    LatLng latLogAnterior = new LatLng(latAnterior, logAnterior);
+
+                    //Cenas random estou a pensar
+                    todasParagensRotaCerta.get(0);
+                    todasParagensRotaCerta.get(todasParagensRotaCerta.size() -1 );
+
+                    //SETUP NA NOVA PARAGEM
+                    double lat = todasParagensRotaCerta.get(i).getLatitude();
+                    double log = todasParagensRotaCerta.get(i).getLongitude();
+                    LatLng latLog = new LatLng(lat,log);
+                    mMapa.addMarker(new MarkerOptions()
+                            .position(latLog)
+                            .title(todasParagensRotaCerta.get(i).getNome() + " Horario: " + todasParagensRotaCerta.get(i).getHorario()));
+
+
+                    //Desenhar no Mapa
+                    String urlx = getRequestUrl(latLogAnterior, latLog);
+                    TaskRequestDirections taskRequestDirectionsx = new TaskRequestDirections();
+                    taskRequestDirectionsx.execute(urlx);
+
+
+
+                    //GUARDAR PARAGEM ANTERIRO
+                    latAnterior = todasParagensRotaCerta.get(i).getLatitude();
+                    logAnterior = todasParagensRotaCerta.get(i).getLongitude();
+
+
+
+                    if( Integer.parseInt(idParagemMaisProxima )  == todasParagensRotaCerta.get(i).getId())
+                        break;
+
 
                 }
 
