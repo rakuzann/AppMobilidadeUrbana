@@ -41,7 +41,7 @@ public class testes extends AppCompatActivity {
         new Thread(){
             public void run (){
 
-                ArrayList<Paragem> arrayPara =  server.postHttpGetParagens(user.getText().toString(),password.getText().toString());
+                ArrayList<Paragem> arrayPara =  server.postHttpGetParagensDuasRotas(user.getText().toString(),password.getText().toString());
 
 
                 for(Paragem p:arrayPara){

@@ -284,7 +284,7 @@ public class server {
         return rotas;
     }
 
-    public static boolean mesmaRota(String parA,String parB){
+    public static int mesmaRota(String parA,String parB){
 
         int[] rotasParagemA = postGetRotasFromParagem(parA);
         int[] rotasParagemB = postGetRotasFromParagem(parB);
@@ -293,11 +293,11 @@ public class server {
             for(int y=0;y<rotasParagemB.length;y++){
 
                 if(rotasParagemA[i]==rotasParagemB[y])
-                        return true;
+                        return rotasParagemA[i];
             }
         }
 
-        return false;
+        return -1;
     }
 
     public static ArrayList<Paragem> postHttpGetParagens(String id_rota) {
@@ -426,6 +426,56 @@ public class server {
                     paragem.setLongitude(idk.getDouble("longitude"));
                     paragem.setId_rota(Integer.parseInt(id_rota));
                     paragem.setHorario(idk.getDouble("horario"));
+
+                    arrayParagens.add(paragem);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        catch (ClientProtocolException e) {}
+        catch (IOException e) {}
+
+        return arrayParagens;
+    }
+
+    public static ArrayList<Paragem> postHttpGetParagensDuasRotas(String rota_a,String rota_b) {
+        Paragem paragem = null;
+        ArrayList<Paragem> arrayParagens = new ArrayList<>();
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/getParagensDuasRotas.php");
+
+        try {
+
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
+
+            val.add(new BasicNameValuePair("rota_a", rota_a));
+            val.add(new BasicNameValuePair("rota_b", rota_b));
+
+            httpPost.setEntity(new UrlEncodedFormEntity(val));
+
+            HttpResponse resposta = httpClient.execute(httpPost);
+
+            try {
+                final String resp = EntityUtils.toString(resposta.getEntity());
+                JSONObject reader = new JSONObject(resp);
+                JSONArray favJSon  = reader.getJSONArray("Paragens");
+
+                for (int i = 0; i < favJSon.getJSONArray(0).length(); i++) {
+                    paragem = new Paragem();
+
+                    JSONObject idk = (JSONObject)favJSon.getJSONArray(0).getJSONObject(i);
+
+                    paragem.setId(idk.getInt("id"));
+                    paragem.setNome(idk.getString("nome"));
+                    paragem.setLatitude(idk.getDouble("latitude"));
+                    paragem.setLongitude(idk.getDouble("longitude"));
+                    paragem.setId_rota(Integer.parseInt(rota_a));
 
                     arrayParagens.add(paragem);
                 }
