@@ -268,7 +268,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivity(acc);
                 break;
             case R.id.nav_settings:
-                Toast.makeText(this, "nav_settings", Toast.LENGTH_SHORT).show();
+                Intent lim = new Intent(this, editarLimitacoes.class);
+                lim.putExtra("utilizador",utilizador);
+                startActivity(lim);
                 break;
             case R.id.nav_taxi:
                 Intent i = new Intent(this, TaxiActivity.class);

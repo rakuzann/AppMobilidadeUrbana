@@ -53,7 +53,8 @@
         <activity android:name=".MapaFavortios" />
         <activity android:name=".addFavorito" />
         <activity android:name=".PontosFavoritosActivity" />
-        <activity android:name=".editarPerfil"></activity>
+        <activity android:name=".editarPerfil" />
+        <activity android:name=".editarLimitacoes"></activity>
     </application>
 
 </manifest>
