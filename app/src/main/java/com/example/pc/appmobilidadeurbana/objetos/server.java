@@ -520,4 +520,102 @@ public class server {
 
         return arrayParagens;
     }
+
+    public static int[] postGetLimitacoesUser(String id_user) {
+
+        int[] lim = null;
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/getLimitacoesUser.php");
+
+        try {
+
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
+
+            val.add(new BasicNameValuePair("id", id_user));
+
+            httpPost.setEntity(new UrlEncodedFormEntity(val));
+
+            HttpResponse resposta = httpClient.execute(httpPost);
+
+
+            try {
+
+                final String resp = EntityUtils.toString(resposta.getEntity());
+                JSONObject reader = new JSONObject(resp);
+                JSONArray favJSon  = reader.getJSONArray("lim");
+
+                lim = new int[favJSon.getJSONArray(0).length()];
+
+                for (int i = 0; i < favJSon.getJSONArray(0).length(); i++) {
+
+                    JSONObject idk = (JSONObject)favJSon.getJSONArray(0).getJSONObject(i);
+
+                    lim[i] = idk.getInt("id_limitacao");
+
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        catch (ClientProtocolException e) {}
+        catch (IOException e) {}
+
+        return lim;
+    }
+
+    public static void postAddLimitacao(String id_user, String id_limitacao) {
+
+        Utilizador utilizador = null;
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/addLimitacao.php");
+
+        try {
+
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
+
+            val.add(new BasicNameValuePair("id_user", id_user));
+            val.add(new BasicNameValuePair("id_limitacao", id_limitacao));
+
+
+            httpPost.setEntity(new UrlEncodedFormEntity(val));
+            httpClient.execute(httpPost);
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void postRemLimitacao(String id_user, String id_limitacao) {
+
+        Utilizador utilizador = null;
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/remLimitacao.php");
+
+        try {
+
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
+
+            val.add(new BasicNameValuePair("id_user", id_user));
+            val.add(new BasicNameValuePair("id_limitacao", id_limitacao));
+
+
+            httpPost.setEntity(new UrlEncodedFormEntity(val));
+            httpClient.execute(httpPost);
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
