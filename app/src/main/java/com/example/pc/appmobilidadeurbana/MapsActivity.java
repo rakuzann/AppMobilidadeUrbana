@@ -91,9 +91,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
    //array que vai buscar todas as paragens do mapa
     ArrayList<Paragem> todasParagensMapa;
+    ArrayList<Paragem> todasParagensRotaCerta;
+
 
    //Boolean que vai indicar se duas paragens pertecenm a mesma rota
-    boolean memaRota;
+    int memaRota;
 
 
     //Utilizador
@@ -369,7 +371,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
-    //Cria array com as paragens todas do mapa
+
+    //Metodos que utilizam a base dados
     public void apanharParagens (){
 
         new Thread(){
@@ -395,12 +398,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final String idRouta1 = id1;
         final String idRouta2 = id2;
 
-        new Thread(){
+        Thread t = new Thread(){
             public void run (){
                 memaRota = server.mesmaRota( idRouta1,idRouta2);
+
             }
-        }.start();
+        };
+
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
+    public void obterRotaCerta(String id){
+        final String idRota = id;
+        Thread th = new Thread(){
+            public void run (){
+                todasParagensRotaCerta = server.postHttpGetParagens(idRota,"5.15");
+            }
+        };
+
+        th.start();
+        try {
+            th.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     public void paragemProximaMim (final LatLng ponto){
@@ -541,7 +568,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //Marcado paragem mais proxima do utilizador
             paragemProximaMim(myPlace);
             LatLng nearMe = new LatLng(paragemMaisProximaLatX, paragemMaisProximaLog);
-            String idRouta1 = idParagemMaisProxima;
+            String idParagem1 = idParagemMaisProxima;
 
             //Metodos calular rota a pe do origem
             String urlOrigem = getRequestUrlWalking(myPlace, nearMe);
@@ -558,7 +585,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             paragemProximaMim(destino);
             LatLng nearDestino = new LatLng(paragemMaisProximaLatX, paragemMaisProximaLog);
             mMapa.addMarker(new MarkerOptions().position(destino).title("Destino"));
-            String idRouta2 = idParagemMaisProxima;
+            String idParagem2 = idParagemMaisProxima;
+
 
 
             //Metodos calular rota a pe do destion
@@ -576,8 +604,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             latitudeFav = address.getLatitude();
             longitudeFav = address.getLongitude();
 
-            verficarMesmaRota(idRouta1,idRouta2);
-            if(memaRota){
+
+
+
+            verficarMesmaRota(idParagem1,idParagem2);
+            if(memaRota != -1){
+                obterRotaCerta(String.valueOf(memaRota));
+                
+                for (int i = 0; i < todasParagensRotaCerta.size(); i++){
+
+                }
+
 
             }
 
