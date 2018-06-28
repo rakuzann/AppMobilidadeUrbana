@@ -41,16 +41,17 @@ public class testes extends AppCompatActivity {
         new Thread(){
             public void run (){
 
-                ArrayList<Paragem> arrayPara =  server.postHttpGetParagensDuasRotas(user.getText().toString(),password.getText().toString());
+                int[] lim = server.postGetLimitacoesRota("1");
 
+                for(int i=0;i<lim.length;i++){
+                    if(lim[i]==1){
+                        Log.d("lala","limitacao 1");
+                    }
 
-                for(Paragem p:arrayPara){
-                    Log.d("NOME",p.getNome());
-                    Log.d("LATITUDE",String.valueOf(p.getLatitude()));
-                    Log.d("LONGITUDE",String.valueOf(p.getLongitude()));
-                    Log.d("HORARIO",String.valueOf(p.getHorario()));
+                    if(lim[i]==2){
+                        Log.d("lala","limitacao 2");
+                    }
                 }
-
 
             }
         }.start();

@@ -571,6 +571,54 @@ public class server {
         return lim;
     }
 
+    public static int[] postGetLimitacoesRota(String id_rota) {
+
+        int[] lim = null;
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost("http://projectos.est.ipcb.pt/MyBestTransfer/getLimitacoesRota.php");
+
+        try {
+
+            ArrayList<NameValuePair> val = new ArrayList<NameValuePair>();
+
+            val.add(new BasicNameValuePair("id", id_rota));
+
+            httpPost.setEntity(new UrlEncodedFormEntity(val));
+
+            HttpResponse resposta = httpClient.execute(httpPost);
+
+
+            try {
+
+                final String resp = EntityUtils.toString(resposta.getEntity());
+                JSONObject reader = new JSONObject(resp);
+                JSONArray favJSon  = reader.getJSONArray("lim");
+
+                lim = new int[favJSon.getJSONArray(0).length()];
+
+                for (int i = 0; i < favJSon.getJSONArray(0).length(); i++) {
+
+                    JSONObject idk = (JSONObject)favJSon.getJSONArray(0).getJSONObject(i);
+
+                    lim[i] = idk.getInt("id_limitacao");
+
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        catch (ClientProtocolException e) {}
+        catch (IOException e) {}
+
+        return lim;
+    }
+
     public static void postAddLimitacao(String id_user, String id_limitacao) {
 
         Utilizador utilizador = null;
