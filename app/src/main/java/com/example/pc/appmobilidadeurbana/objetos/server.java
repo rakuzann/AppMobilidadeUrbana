@@ -22,7 +22,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
 public class server {
+
+
+
 
     public static Utilizador postLoginHttp(String user, String pass) {
         Utilizador utilizador = null;
@@ -668,4 +672,6 @@ public class server {
         }
 
     }
+
+
 }

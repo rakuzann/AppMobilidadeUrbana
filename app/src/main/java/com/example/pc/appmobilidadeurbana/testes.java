@@ -23,6 +23,14 @@ public class testes extends AppCompatActivity {
 
     Button btn;
 
+
+    //booleans das limitacoes
+    boolean user1 = false;
+    boolean user2 = false;
+    boolean rota1 = false;
+    boolean rota2 = false;
+    boolean podeAndar = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,21 +49,60 @@ public class testes extends AppCompatActivity {
         new Thread(){
             public void run (){
 
-                int[] lim = server.postGetLimitacoesRota("1");
 
-                for(int i=0;i<lim.length;i++){
-                    if(lim[i]==1){
-                        Log.d("lala","limitacao 1");
+                podeAndar = false;
+
+                int[] limRota = server.postGetLimitacoesRota("1");
+
+                for(int i=0;i<limRota.length;i++){
+                    if(limRota[i]==1){
+                        rota1=true;
                     }
 
-                    if(lim[i]==2){
-                        Log.d("lala","limitacao 2");
+                    if(limRota[i]==2){
+                        rota2=true;
                     }
                 }
+
+                int[] limUser = server.postGetLimitacoesUser("1");
+
+                for(int i=0;i<limUser.length;i++){
+                    if(limUser[i]==1){
+                        user1 = true;
+                    }
+
+                    if(limUser[i]==2){
+                        rota2 = true;
+                    }
+                }
+
+
+
+
+                if(!user1 && !user2){
+                    podeAndar = true;
+                }else if(!user1 && user2){
+                    if(rota2){
+                        podeAndar = true;
+                    }
+                }else if(user1 && !user2){
+                    if(rota1){
+                        podeAndar = true;
+                    }
+                }else if(user1 && user2){
+                    if(rota1 && rota2){
+                        podeAndar = true;
+                    }
+                }else{
+                    podeAndar = false;
+                }
+
 
             }
         }.start();
 
+
+        Log.d("lala",String.valueOf(podeAndar));
 
     }
 

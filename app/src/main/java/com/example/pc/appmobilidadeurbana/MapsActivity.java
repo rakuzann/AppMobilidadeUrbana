@@ -101,6 +101,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
    //Boolean que vai indicar se duas paragens pertecenm a mesma rota
     int memaRota;
 
+    //booleans das limitacoes
+    boolean user1 = false;
+    boolean user2 = false;
+    boolean rota1 = false;
+    boolean rota2 = false;
+    boolean podeAndar = false;
 
     //Utilizador
     Utilizador utilizador;
@@ -459,7 +465,65 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    public void podeAndar(String id_rota,String id_user){
 
+        new Thread(){
+            public void run (){
+
+
+                podeAndar = false;
+
+                int[] limRota = server.postGetLimitacoesRota("1");
+
+                for(int i=0;i<limRota.length;i++){
+                    if(limRota[i]==1){
+                        rota1=true;
+                    }
+
+                    if(limRota[i]==2){
+                        rota2=true;
+                    }
+                }
+
+                int[] limUser = server.postGetLimitacoesUser("1");
+
+                for(int i=0;i<limUser.length;i++){
+                    if(limUser[i]==1){
+                        user1 = true;
+                    }
+
+                    if(limUser[i]==2){
+                        rota2 = true;
+                    }
+                }
+
+
+
+
+                if(!user1 && !user2){
+                    podeAndar = true;
+                }else if(!user1 && user2){
+                    if(rota2){
+                        podeAndar = true;
+                    }
+                }else if(user1 && !user2){
+                    if(rota1){
+                        podeAndar = true;
+                    }
+                }else if(user1 && user2){
+                    if(rota1 && rota2){
+                        podeAndar = true;
+                    }
+                }else{
+                    podeAndar = false;
+                }
+
+
+            }
+        }.start();
+
+
+    }
 
 
     public void paragemProximaMim (final LatLng ponto){
