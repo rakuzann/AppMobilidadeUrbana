@@ -103,6 +103,7 @@ public class testes extends AppCompatActivity {
 
 
         Log.d("lala",String.valueOf(podeAndar));
+        
 
     }
 
