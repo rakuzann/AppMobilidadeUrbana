@@ -475,6 +475,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
                 podeAndar = false;
+                rota1 = false;
+                rota2 = false;
+                user1 = false;
+                user2 = false;
 
                 int[] limRota = server.postGetLimitacoesRota(idRota);
 
@@ -496,7 +500,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
 
                     if (limUser[i] == 2) {
-                        rota2 = true;
+                        user2 = true;
                     }
                 }
 
@@ -514,6 +518,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else if (user1 && user2) {
                     if (rota1 && rota2) {
                         podeAndar = true;
+                    }else {
+                        podeAndar = false;
                     }
                 } else {
                     podeAndar = false;
@@ -938,7 +944,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         longitudeFav = destino.longitude;
 
 
-
         //Obter Horas do sistema
         int currentHour = Calendar.getInstance().getTime().getHours();
         int currentMinutes = Calendar.getInstance().getTime().getMinutes();
@@ -950,63 +955,73 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //SE DUAS PARAGENS FIZEREM PARTE DA MESMA ROTA
         if (memaRota != -1) {
 
-            //VER SE EXISTEM ROTAS PARA O HORARIO PRESENTE, SE NAO MUDAR PARA O PROXIMO DIA
-            obterRotaCerta(String.valueOf(memaRota), horasSistema);
-            if (todasParagensRotaCerta.size() == 0) {
-                obterRotaCerta(String.valueOf(memaRota), "0.0");
-            }
 
-            //VIR BUSCAR O ID DA PRIMEIRA PARAGEM A DESENHAR
-            int aux = 0;
-            for (int x = 0; x < todasParagensRotaCerta.size(); x++) {
-                if (idParagem1 == String.valueOf(todasParagensRotaCerta.get(x).getId())) {
-                    aux = x + 1;
-                    break;
-                }
-            }
+            podeAndar(String.valueOf(memaRota), String.valueOf(utilizador.getId()));
+            if (podeAndar) {
 
 
-            //DESENHAR O CAMINHO ENTRE PARAGENS
-            for (int i = aux; i < todasParagensRotaCerta.size(); i++) {
-
-                //COORDENADAS DA PARAGEM INICIAL
-                if (i == aux) {
-                    latAnterior = nearMeLatitude;
-                    logAnterior = nearMeLongitude;
+                //VER SE EXISTEM ROTAS PARA O HORARIO PRESENTE, SE NAO MUDAR PARA O PROXIMO DIA
+                obterRotaCerta(String.valueOf(memaRota), horasSistema);
+                if (todasParagensRotaCerta.size() == 0) {
+                    obterRotaCerta(String.valueOf(memaRota), "0.0");
                 }
 
-                LatLng latLogAnterior = new LatLng(latAnterior, logAnterior);
-
-
-                //SETUP DA NOVA PARAGEM
-                double lat = todasParagensRotaCerta.get(i).getLatitude();
-                double log = todasParagensRotaCerta.get(i).getLongitude();
-                LatLng latLog = new LatLng(lat, log);
-
-
-                //MARCAR TODOS OS PONTOS NO MAPA MENOS O DESTINO QUE JA SE ENCONTRA MARCADO
-                if (idParagemMaisProxima != String.valueOf(todasParagensRotaCerta.get(i).getId())) {
-                    mMapa.addMarker(new MarkerOptions()
-                            .position(latLog)
-                            .title(todasParagensRotaCerta.get(i).getNome() + " Horario: " + todasParagensRotaCerta.get(i).getHorario()));
+                //VIR BUSCAR O ID DA PRIMEIRA PARAGEM A DESENHAR
+                int aux = 0;
+                for (int x = 0; x < todasParagensRotaCerta.size(); x++) {
+                    if (idParagem1 == String.valueOf(todasParagensRotaCerta.get(x).getId())) {
+                        aux = x + 1;
+                        break;
+                    }
                 }
 
-                //Desenhar no Mapa
-                String urlx = getRequestUrl(latLogAnterior, latLog);
-                TaskRequestDirections taskRequestDirectionsx = new TaskRequestDirections();
-                taskRequestDirectionsx.execute(urlx);
+
+                //DESENHAR O CAMINHO ENTRE PARAGENS
+                for (int i = aux; i < todasParagensRotaCerta.size(); i++) {
+
+                    //COORDENADAS DA PARAGEM INICIAL
+                    if (i == aux) {
+                        latAnterior = nearMeLatitude;
+                        logAnterior = nearMeLongitude;
+                    }
+
+                    LatLng latLogAnterior = new LatLng(latAnterior, logAnterior);
 
 
-                //GUARDAR PARAGEM ANTERIRO
-                latAnterior = todasParagensRotaCerta.get(i).getLatitude();
-                logAnterior = todasParagensRotaCerta.get(i).getLongitude();
+                    //SETUP DA NOVA PARAGEM
+                    double lat = todasParagensRotaCerta.get(i).getLatitude();
+                    double log = todasParagensRotaCerta.get(i).getLongitude();
+                    LatLng latLog = new LatLng(lat, log);
 
 
-                //PARA O METODO NA PARAGEM DE DESTINO
-                if (Integer.parseInt(idParagemMaisProxima) == todasParagensRotaCerta.get(i).getId())
-                    break;
+                    //MARCAR TODOS OS PONTOS NO MAPA MENOS O DESTINO QUE JA SE ENCONTRA MARCADO
+                    if (idParagemMaisProxima != String.valueOf(todasParagensRotaCerta.get(i).getId())) {
+                        mMapa.addMarker(new MarkerOptions()
+                                .position(latLog)
+                                .title(todasParagensRotaCerta.get(i).getNome() + " Horario: " + todasParagensRotaCerta.get(i).getHorario()));
+                    }
+
+                    //Desenhar no Mapa
+                    String urlx = getRequestUrl(latLogAnterior, latLog);
+                    TaskRequestDirections taskRequestDirectionsx = new TaskRequestDirections();
+                    taskRequestDirectionsx.execute(urlx);
 
 
+                    //GUARDAR PARAGEM ANTERIRO
+                    latAnterior = todasParagensRotaCerta.get(i).getLatitude();
+                    logAnterior = todasParagensRotaCerta.get(i).getLongitude();
+
+
+                    //PARA O METODO NA PARAGEM DE DESTINO
+                    if (Integer.parseInt(idParagemMaisProxima) == todasParagensRotaCerta.get(i).getId())
+                        break;
+
+                }
+
+            } else {
+                Toast.makeText(this, "Nao Existem Rotas", Toast.LENGTH_SHORT).show();
+                mMapa.clear();
+                return;
             }
 
         }
@@ -1040,139 +1055,154 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return;
             }
 
+            //
+            podeAndar(String.valueOf(rotaComumOrigem), String.valueOf(utilizador.getId()));
+            boolean rota1Pode = podeAndar;
+            podeAndar(String.valueOf(rotaComumDestino), String.valueOf(utilizador.getId()));
+            boolean rota2Pode = podeAndar;
 
-            //DESENHAR MARCADOR DA PARAGEM COMUM
-            double latCoumum = paragemComuns.get(0).getLatitude();
-            double logComum = paragemComuns.get(0).getLongitude();
-            LatLng paragemDoMeio = new LatLng(latCoumum, logComum);
-            mMapa.addMarker(new MarkerOptions()
-                    .position(paragemDoMeio)
-                    .title(paragemComuns.get(0).getNome()));
+            Log.d("ROTA1", String.valueOf(rota1Pode));
+            Log.d("ROTA2", String.valueOf(rota2Pode));
+            if (rota1Pode && rota2Pode) {
+
+                //DESENHAR MARCADOR DA PARAGEM COMUM
+                double latCoumum = paragemComuns.get(0).getLatitude();
+                double logComum = paragemComuns.get(0).getLongitude();
+                LatLng paragemDoMeio = new LatLng(latCoumum, logComum);
+                mMapa.addMarker(new MarkerOptions()
+                        .position(paragemDoMeio)
+                        .title(paragemComuns.get(0).getNome()));
 
 
-            //DESENHAR DESDE ORIGEM ATE PARAGEM COMUM
+                //DESENHAR DESDE ORIGEM ATE PARAGEM COMUM
 
 
-            //VERIFICAR HORARIOS
-            obterRotaCerta(String.valueOf(rotaComumOrigem), horasSistema);
-            if (todasParagensRotaCerta.size() == 0) {
-                obterRotaCerta(String.valueOf(rotaComumOrigem), "0.0");
-            }
-
-            //VIR BUSCAR O ID DA PRIMEIRA PARAGEM A DESENHAR
-            int aux = 0;
-            for (int x = 0; x < todasParagensRotaCerta.size(); x++) {
-                if (idParagem1 == String.valueOf(todasParagensRotaCerta.get(x).getId())) {
-                    aux = x + 1;
-                    break;
-                }
-            }
-
-            //DESENHAR O CAMINHO ENTRE PARAGENS ATE A COMUM
-            for (int i = aux; i < todasParagensRotaCerta.size(); i++) {
-
-                //COORDENADAS DA PARAGEM INICIAL
-                if (i == aux) {
-                    latAnterior = nearMeLatitude;
-                    logAnterior = nearMeLongitude;
+                //VERIFICAR HORARIOS
+                obterRotaCerta(String.valueOf(rotaComumOrigem), horasSistema);
+                if (todasParagensRotaCerta.size() == 0) {
+                    obterRotaCerta(String.valueOf(rotaComumOrigem), "0.0");
                 }
 
-                LatLng latLogAnterior = new LatLng(latAnterior, logAnterior);
-
-
-                //SETUP DA NOVA PARAGEM
-                double lat = todasParagensRotaCerta.get(i).getLatitude();
-                double log = todasParagensRotaCerta.get(i).getLongitude();
-                LatLng latLog = new LatLng(lat, log);
-
-
-                //MARCAR TODOS OS PONTOS NO MAPA MENOS O DESTINO QUE JA SE ENCONTRA MARCADO
-                if (paragemComuns.get(0).getId() != todasParagensRotaCerta.get(i).getId()) {
-                    mMapa.addMarker(new MarkerOptions()
-                            .position(latLog)
-                            .title(todasParagensRotaCerta.get(i).getNome() + " Horario: " + todasParagensRotaCerta.get(i).getHorario()));
+                //VIR BUSCAR O ID DA PRIMEIRA PARAGEM A DESENHAR
+                int aux = 0;
+                for (int x = 0; x < todasParagensRotaCerta.size(); x++) {
+                    if (idParagem1 == String.valueOf(todasParagensRotaCerta.get(x).getId())) {
+                        aux = x + 1;
+                        break;
+                    }
                 }
 
-                //Desenhar no Mapa
-                String urlx = getRequestUrl(latLogAnterior, latLog);
-                TaskRequestDirections taskRequestDirectionsx = new TaskRequestDirections();
-                taskRequestDirectionsx.execute(urlx);
+                //DESENHAR O CAMINHO ENTRE PARAGENS ATE A COMUM
+                for (int i = aux; i < todasParagensRotaCerta.size(); i++) {
+
+                    //COORDENADAS DA PARAGEM INICIAL
+                    if (i == aux) {
+                        latAnterior = nearMeLatitude;
+                        logAnterior = nearMeLongitude;
+                    }
+
+                    LatLng latLogAnterior = new LatLng(latAnterior, logAnterior);
 
 
-                //GUARDAR PARAGEM ANTERIRO
-                latAnterior = todasParagensRotaCerta.get(i).getLatitude();
-                logAnterior = todasParagensRotaCerta.get(i).getLongitude();
+                    //SETUP DA NOVA PARAGEM
+                    double lat = todasParagensRotaCerta.get(i).getLatitude();
+                    double log = todasParagensRotaCerta.get(i).getLongitude();
+                    LatLng latLog = new LatLng(lat, log);
 
 
-                //PARA O METODO NA PARAGEM DE DESTINO
-                if (paragemComuns.get(0).getId() == todasParagensRotaCerta.get(i).getId())
-                    break;
+                    //MARCAR TODOS OS PONTOS NO MAPA MENOS O DESTINO QUE JA SE ENCONTRA MARCADO
+                    if (paragemComuns.get(0).getId() != todasParagensRotaCerta.get(i).getId()) {
+                        mMapa.addMarker(new MarkerOptions()
+                                .position(latLog)
+                                .title(todasParagensRotaCerta.get(i).getNome() + " Horario: " + todasParagensRotaCerta.get(i).getHorario()));
+                    }
+
+                    //Desenhar no Mapa
+                    String urlx = getRequestUrl(latLogAnterior, latLog);
+                    TaskRequestDirections taskRequestDirectionsx = new TaskRequestDirections();
+                    taskRequestDirectionsx.execute(urlx);
 
 
-            }
+                    //GUARDAR PARAGEM ANTERIRO
+                    latAnterior = todasParagensRotaCerta.get(i).getLatitude();
+                    logAnterior = todasParagensRotaCerta.get(i).getLongitude();
+
+
+                    //PARA O METODO NA PARAGEM DE DESTINO
+                    if (paragemComuns.get(0).getId() == todasParagensRotaCerta.get(i).getId())
+                        break;
+
+
+                }
 
 //--------------------------------------------------------------------------------------------------------------------
 
-            //DESENHAR DESDE PARAGEM COMUM ATE DESTINO
+                //DESENHAR DESDE PARAGEM COMUM ATE DESTINO
 
-            //VERIFICAR HORARIOS
-            obterRotaCerta(String.valueOf(rotaComumDestino), horasSistema);
-            if (todasParagensRotaCerta.size() == 0) {
-                obterRotaCerta(String.valueOf(rotaComumDestino), "0.0");
-            }
-
-            //VIR BUSCAR O ID DA PRIMEIRA PARAGEM A DESENHAR
-            int auxDest = 0;
-            for (int x = 0; x < todasParagensRotaCerta.size(); x++) {
-                if (idParagem1 == String.valueOf(todasParagensRotaCerta.get(x).getId())) {
-                    auxDest = x + 1;
-                    break;
-                }
-            }
-
-
-            //DESENHAR O CAMINHO ENTRE PARAGENS ATE A COMUM
-            for (int i = auxDest; i < todasParagensRotaCerta.size(); i++) {
-
-                //COORDENADAS DA PARAGEM INICIAL
-                if (i == auxDest) {
-                    latAnterior = paragemComuns.get(0).getLatitude();
-                    logAnterior = paragemComuns.get(0).getLongitude();
+                //VERIFICAR HORARIOS
+                obterRotaCerta(String.valueOf(rotaComumDestino), horasSistema);
+                if (todasParagensRotaCerta.size() == 0) {
+                    obterRotaCerta(String.valueOf(rotaComumDestino), "0.0");
                 }
 
-                LatLng latLogAnterior = new LatLng(latAnterior, logAnterior);
-
-
-                //SETUP DA NOVA PARAGEM
-                double lat = todasParagensRotaCerta.get(i).getLatitude();
-                double log = todasParagensRotaCerta.get(i).getLongitude();
-                LatLng latLog = new LatLng(lat, log);
-
-
-                //MARCAR TODOS OS PONTOS NO MAPA MENOS O DESTINO QUE JA SE ENCONTRA MARCADO
-                if (Integer.parseInt(idParagemMaisProxima) != todasParagensRotaCerta.get(i).getId()) {
-                    mMapa.addMarker(new MarkerOptions()
-                            .position(latLog)
-                            .title(todasParagensRotaCerta.get(i).getNome() + " Horario: " + todasParagensRotaCerta.get(i).getHorario()));
+                //VIR BUSCAR O ID DA PRIMEIRA PARAGEM A DESENHAR
+                int auxDest = 0;
+                for (int x = 0; x < todasParagensRotaCerta.size(); x++) {
+                    if (idParagem1 == String.valueOf(todasParagensRotaCerta.get(x).getId())) {
+                        auxDest = x + 1;
+                        break;
+                    }
                 }
 
 
-                //Desenhar no Mapa
-                String urlx = getRequestUrlRota(latLogAnterior, latLog);
-                TaskRequestDirectionsRota taskRequestDirectionsx = new TaskRequestDirectionsRota();
-                taskRequestDirectionsx.execute(urlx);
+                //DESENHAR O CAMINHO ENTRE PARAGENS ATE A COMUM
+                for (int i = auxDest; i < todasParagensRotaCerta.size(); i++) {
+
+                    //COORDENADAS DA PARAGEM INICIAL
+                    if (i == auxDest) {
+                        latAnterior = paragemComuns.get(0).getLatitude();
+                        logAnterior = paragemComuns.get(0).getLongitude();
+                    }
+
+                    LatLng latLogAnterior = new LatLng(latAnterior, logAnterior);
 
 
-                //GUARDAR PARAGEM ANTERIRO
-                latAnterior = todasParagensRotaCerta.get(i).getLatitude();
-                logAnterior = todasParagensRotaCerta.get(i).getLongitude();
+                    //SETUP DA NOVA PARAGEM
+                    double lat = todasParagensRotaCerta.get(i).getLatitude();
+                    double log = todasParagensRotaCerta.get(i).getLongitude();
+                    LatLng latLog = new LatLng(lat, log);
 
 
-                //PARA O METODO NA PARAGEM DE DESTINO
-                if (Integer.parseInt(idParagemMaisProxima) == todasParagensRotaCerta.get(i).getId())
-                    break;
+                    //MARCAR TODOS OS PONTOS NO MAPA MENOS O DESTINO QUE JA SE ENCONTRA MARCADO
+                    if (Integer.parseInt(idParagemMaisProxima) != todasParagensRotaCerta.get(i).getId()) {
+                        mMapa.addMarker(new MarkerOptions()
+                                .position(latLog)
+                                .title(todasParagensRotaCerta.get(i).getNome() + " Horario: " + todasParagensRotaCerta.get(i).getHorario()));
+                    }
 
 
+                    //Desenhar no Mapa
+                    String urlx = getRequestUrlRota(latLogAnterior, latLog);
+                    TaskRequestDirectionsRota taskRequestDirectionsx = new TaskRequestDirectionsRota();
+                    taskRequestDirectionsx.execute(urlx);
+
+
+                    //GUARDAR PARAGEM ANTERIRO
+                    latAnterior = todasParagensRotaCerta.get(i).getLatitude();
+                    logAnterior = todasParagensRotaCerta.get(i).getLongitude();
+
+
+                    //PARA O METODO NA PARAGEM DE DESTINO
+                    if (Integer.parseInt(idParagemMaisProxima) == todasParagensRotaCerta.get(i).getId())
+                        break;
+
+
+                }
+
+            }else{
+                Toast.makeText(this, "Nao existem rotas", Toast.LENGTH_SHORT).show();
+                mMapa.clear();
+                return;
             }
 
 
@@ -1320,6 +1350,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
 
+                mMapa.clear();
+                return;
             }
 
 
@@ -1448,7 +1480,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (polylineOptions != null) {
                 mMapa.addPolyline(polylineOptions);
             } else {
-                Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();;
+                Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
+                ;
+                mMapa.clear();
+                return;
             }
 
         }
@@ -1578,6 +1613,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMapa.addPolyline(polylineOptions);
             } else {
                 Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
+                mMapa.clear();
+                return;
             }
 
         }
