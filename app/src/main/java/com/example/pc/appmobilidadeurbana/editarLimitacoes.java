@@ -35,6 +35,7 @@ public class editarLimitacoes extends AppCompatActivity {
 
         utilizador = (Utilizador) getIntent().getSerializableExtra("utilizador");
 
+
         //ver quais as cenas do utilizador atual
         new Thread(){
             public void run (){
@@ -63,6 +64,22 @@ public class editarLimitacoes extends AppCompatActivity {
         }.start();
 
 
+        /*
+        int[] lim = utilizador.getLimitacoes();
+
+        for(int i=0;i<lim.length;i++){
+            if(lim[i]==1){
+                mobilidade.setChecked(true);
+                userMob=true;
+            }
+
+            if(lim[i]==2){
+                visuais.setChecked(true);
+                userVis=true;
+            }
+        }
+        */
+
         user.setText(user.getText().toString()+" "+utilizador.getNome());
     }
 
@@ -83,47 +100,84 @@ public class editarLimitacoes extends AppCompatActivity {
             vis=false;
 
 
+
         //comparar o estado dos switches e do user, e ver se é necessario alterar
         if(userMob!=mob){
             if(userMob){
-                new Thread(){
+                Thread t4 = new Thread(){
                     public void run (){
 
                         server.postRemLimitacao(String.valueOf(utilizador.getId()),"1");
 
                     }
-                }.start();
+                };
+                t4.start();
+                try {
+                    t4.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }else{
 
-                new Thread(){
+                Thread t3 = new Thread(){
                     public void run (){
 
                         server.postAddLimitacao(String.valueOf(utilizador.getId()),"1");
 
                     }
-                }.start();
+                };
+                t3.start();
+                try {
+                    t3.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
         if(userVis!=vis){
             if(userVis){
-                new Thread(){
+                Thread t1 = new Thread(){
                     public void run (){
 
                         server.postRemLimitacao(String.valueOf(utilizador.getId()),"2");
 
                     }
-                }.start();
+                };
+                t1.start();
+                try {
+                    t1.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }else{
-                new Thread(){
+                Thread t2 = new Thread(){
                     public void run (){
 
                         server.postAddLimitacao(String.valueOf(utilizador.getId()),"2");
 
                     }
-                }.start();
+                };
+                t2.start();
+                try {
+                    t2.join();
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
+
+
+        //atualizar limitações
+        new Thread(){
+            public void run (){
+                utilizador.setLimitacoes(server.postGetLimitacoesUser(String.valueOf(utilizador.getId())));
+            }
+        }.start();
+
+
 
         finish();
     }

@@ -9,6 +9,7 @@ public class Utilizador implements Serializable {
     private String username;
     private String password;
     private String email;
+    private int[] limitacoes;
 
     public Utilizador() {
     }
@@ -27,6 +28,14 @@ public class Utilizador implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int[] getLimitacoes() {
+        return limitacoes;
+    }
+
+    public void setLimitacoes(int[] limitacoes) {
+        this.limitacoes = limitacoes;
     }
 
     public String getNome() {

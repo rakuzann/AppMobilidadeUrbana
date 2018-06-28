@@ -64,6 +64,8 @@ public class server {
         } catch (IOException e) {
         }
 
+        utilizador.setLimitacoes(postGetLimitacoesUser(String.valueOf(utilizador.getId())));
+
         return utilizador;
     }
 
