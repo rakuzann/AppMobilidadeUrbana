@@ -31,8 +31,8 @@ public class SearchActivity extends AppCompatActivity {
 
     public void mudarRota(View v) {
         Intent mudar = new Intent(this, SearchMapActivity.class);
-        mudar.putExtra("destino", txtDestino.getText().toString());
-        mudar.putExtra("origem", txtOrigem.getText().toString());
+        mudar.putExtra("destino", txtDestino.getText().toString() + " Castelo Branco");
+        mudar.putExtra("origem", txtOrigem.getText().toString() + "  Castelo Branco");
         startActivity(mudar);
     }
 }
